@@ -107,6 +107,8 @@ h6 {
     height: 100vh;
     z-index: 1000;
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 1024px) {
@@ -163,6 +165,8 @@ h6 {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .menu-item-aura i {
@@ -251,6 +255,7 @@ h6 {
     border-bottom: 1px solid var(--aura-border);
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
 
 @media (max-width: 1024px) {

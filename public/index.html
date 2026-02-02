@@ -798,6 +798,9 @@
             <span></span>
         </div>
         <div class="header-buttons" id="navLinks">
+            <button class="nav-btn" onclick="openAuraModal('bookingModal', 2); closeMobileMenu();">
+                <i class="fas fa-list"></i> Katalog
+            </button>
             <button class="nav-btn primary" onclick="openAuraModal('bookingModal'); closeMobileMenu();">
                 <i class="fas fa-calendar-check"></i> Randevu
             </button>
@@ -840,7 +843,7 @@
         <div class="features-section">
             <h2 class="section-title">Neden Aura?</h2>
             <div class="features-wrapper">
-                <div class="feature-card">
+                <div class="feature-card" onclick="openAuraModal('bookingModal', 2)">
                     <div class="feature-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
                     <div class="feature-content">
                         <h3>AI Stil Analizi</h3>
@@ -848,14 +851,14 @@
                             estetik.</p>
                     </div>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="openAuraModal('bookingModal')">
                     <div class="feature-icon"><i class="fas fa-calendar-check"></i></div>
                     <div class="feature-content">
                         <h3>Hızlı Randevu</h3>
                         <p>3 adımda müsaitlik durumunu sorgulayın, kuaförünüzü seçin ve rezervasyonunuzu tamamlayın.</p>
                     </div>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="location.href='/login.html'">
                     <div class="feature-icon"><i class="fas fa-gem"></i></div>
                     <div class="feature-content">
                         <h3>Premium Hizmet</h3>
@@ -863,7 +866,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" onclick="openAuraModal('bookingModal', 1)">
                     <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
                     <div class="feature-content">
                         <h3>Güvenli Ödeme</h3>
@@ -989,7 +992,14 @@
     <script src="/js/aura-ui.js"></script>
     <script src="/js/landing.js"></script>
     <script>
-        function openAuraModal(id) { document.getElementById(id).style.display = 'flex'; document.body.style.overflow = 'hidden'; if (id === 'bookingModal') { currentStep = 1; updateWizard(); } }
+        function openAuraModal(id, step = 1) {
+            document.getElementById(id).style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            if (id === 'bookingModal') {
+                currentStep = step;
+                updateWizard();
+            }
+        }
         function closeAuraModal(id) { document.getElementById(id).style.display = 'none'; document.body.style.overflow = 'auto'; }
         let chatHistory = []; // Local history state
 
@@ -1110,6 +1120,31 @@
             }
         });
         document.addEventListener('DOMContentLoaded', () => { if (typeof initParticles === 'function') initParticles(); });
+        // Mobile Menu Logic
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileMenuToggle && navLinks) {
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+
+                // Prevent scrolling when menu is open
+                if (navLinks.classList.contains('active')) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        function closeMobileMenu() {
+            if (mobileMenuToggle && navLinks) {
+                mobileMenuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        }
     </script>
 </body>
 
