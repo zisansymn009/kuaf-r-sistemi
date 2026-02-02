@@ -3,3 +3,19 @@ node_modules/
 .DS_Store
 dist/
 npm-debug.log*
+
+# Database files
+*.db
+*.sqlite
+beautyflow.db
+database.sqlite
+
+# Cache and temporary files
+ai_cache.json
+appts_dump.json
+models_list.txt
+available_models_output.txt
+users-info.txt
+debug-*.js
+test-*.js
+*.log
