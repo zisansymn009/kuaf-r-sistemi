@@ -57,7 +57,9 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 
 // Static files
-app.use(express.static(path.join(__dirname, 'public')));
+const publicPath = path.join(process.cwd(), 'public');
+console.log('Serving static files from:', publicPath);
+app.use(express.static(publicPath));
 
 // API Routes
 app.use('/api/public', (req, res, next) => {
@@ -74,7 +76,7 @@ app.use('/api/patron', patronRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 // 404 handler
