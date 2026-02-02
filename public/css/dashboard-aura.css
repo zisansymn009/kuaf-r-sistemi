@@ -895,3 +895,43 @@ h6 {
     gap: 1rem;
     margin-top: 2rem;
 }
+
+/* Portrait Mobile Adjustments */
+@media (max-width: 480px) {
+    .main-content-aura {
+        padding: 4.5rem 0.75rem 2rem 0.75rem !important;
+    }
+
+    .aura-card {
+        padding: 1.25rem !important;
+        border-radius: 20px;
+    }
+
+    .dashboard-mobile-header h2 {
+        font-size: 1.2rem !important;
+    }
+
+    .grid {
+        gap: 1rem !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    .stat-card {
+        padding: 1.25rem !important;
+    }
+
+    .stat-value {
+        font-size: 1.75rem !important;
+    }
+
+    .card-title {
+        font-size: 1.1rem !important;
+    }
+
+    input,
+    select,
+    textarea,
+    .form-input {
+        font-size: 16px !important;
+    }
+}
