@@ -278,10 +278,13 @@ CREATE TABLE IF NOT EXISTS salon_showcase (
     image_url TEXT,
     is_active INTEGER DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (salon_id) REFERENCES salons(id)
+);
+
 -- Varsayılan Onaylı Salon (Render sıfırlansa da silinmez)
 INSERT OR IGNORE INTO salons (id, name, owner_name, address, phone, is_approved, is_active, subscription_status)
 VALUES (100, 'By Ali Koçak Test Salonu', 'Ali Koçak', 'İstanbul, Türkiye', '05551112233', 1, 1, 'active');
 
 -- Varsayılan Patron Hesabı (Şifre: ali123)
 INSERT OR IGNORE INTO users (id, username, password, role, full_name, salon_id, is_active)
-VALUES (100, 'kuafor_ali', '$2a$10$vO/qFWhrJzE3LVs3Hq1.be7PjLp0F0nEjA8iRjE8iRjE8iRjE8iRj', 'PATRON', 'Ali Koçak', 100, 1);
+VALUES (100, 'kuafor_ali', '$2a$10$tj8lNPuI60zsd3XEbOZtXuwJCqL8/JU8ix2drzk3LHHjd8NF8bG/GG', 'PATRON', 'Ali Koçak', 100, 1);
