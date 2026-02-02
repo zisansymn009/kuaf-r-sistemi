@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kuaför randevu - Salon Kaydı</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-md);
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .login-box {
+            max-width: 550px;
+            width: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .login-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h1 class="login-title">kuaför randevu</h1>
+                <p class="login-subtitle">Salonunuzu Kaydedin</p>
+            </div>
+
+            <div class="card">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Salon Adı *</label>
+                        <input type="text" id="salonName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Patron Adı Soyadı *</label>
+                        <input type="text" id="ownerName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Adres</label>
+                        <input type="text" id="address" class="form-input">
+                    </div>
+                    <div class="grid grid-2 gap-md">
+                        <div class="form-group">
+                            <label class="form-label">Telefon</label>
+                            <input type="tel" id="phone" class="form-input" placeholder="05XX XXX XX XX">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">E-posta</label>
+                            <input type="email" id="email" class="form-input">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kullanıcı Adı *</label>
+                        <input type="text" id="username" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Şifre *</label>
+                        <input type="password" id="password" class="form-input" required>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="width: 100%;">Salon Kaydı Oluştur</button>
+                </form>
+            </div>
+
+            <div class="text-center mt-md">
+                <a href="/login.html" class="text-muted" style="text-decoration: none;">Zaten hesabınız var mı? Giriş
+                    Yap</a>
+            </div>
+            <div class="text-center mt-sm">
+                <a href="/" class="text-muted" style="text-decoration: none;">← Ana Sayfaya Dön</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/utils.js"></script>
+    <script>
+        // Register
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                salonName: document.getElementById('salonName').value,
+                ownerName: document.getElementById('ownerName').value,
+                address: document.getElementById('address').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            };
+
+            try {
+                await apiCall('/auth/register-salon', {
+                    method: 'POST',
+                    body: JSON.stringify(formData)
+                });
+
+                showToast('Salon kaydınız alındı! Super Admin onayı bekleniyor.', 'success');
+
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 2000);
+
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+    </script>
+</body>
+
+</html>

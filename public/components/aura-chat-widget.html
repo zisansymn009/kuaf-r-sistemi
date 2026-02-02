@@ -1,0 +1,264 @@
+<!-- AURA Chat Widget - Standalone Component -->
+<style>
+    .aura-chat-widget {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-top: 2rem;
+    }
+
+    .aura-chat-header {
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    .aura-chat-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .aura-chat-subtitle {
+        color: #64748b;
+        font-size: 0.85rem;
+        margin: 0.5rem 0 0 0;
+    }
+
+    .aura-chat-messages-container {
+        height: 400px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 12px;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    /* Scrollbar styling */
+    .aura-chat-messages-container::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    .aura-chat-messages-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 5px;
+    }
+
+    .aura-chat-messages-container::-webkit-scrollbar-thumb {
+        background: rgba(139, 92, 246, 0.6);
+        border-radius: 5px;
+    }
+
+    .aura-chat-messages-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(139, 92, 246, 0.8);
+    }
+
+    .aura-chat-message {
+        margin-bottom: 1rem;
+        display: flex;
+        animation: messageSlide 0.3s ease;
+    }
+
+    @keyframes messageSlide {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .aura-chat-message.user {
+        justify-content: flex-end;
+    }
+
+    .aura-chat-message.ai {
+        justify-content: flex-start;
+    }
+
+    .aura-chat-bubble {
+        padding: 1rem 1.25rem;
+        border-radius: 16px;
+        max-width: 75%;
+        word-wrap: break-word;
+        line-height: 1.6;
+    }
+
+    .aura-chat-message.user .aura-chat-bubble {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: #fff;
+        border-bottom-right-radius: 4px;
+    }
+
+    .aura-chat-message.ai .aura-chat-bubble {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+        border-bottom-left-radius: 4px;
+    }
+
+    .aura-chat-input-area {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .aura-chat-input {
+        flex: 1;
+        padding: 0.875rem 1.25rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: #fff;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .aura-chat-input:focus {
+        outline: none;
+        border-color: #8b5cf6;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .aura-chat-input::placeholder {
+        color: #64748b;
+    }
+
+    .aura-chat-send-btn {
+        padding: 0.875rem 1.5rem;
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .aura-chat-send-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+    }
+
+    .aura-chat-send-btn:active {
+        transform: translateY(0);
+    }
+
+    .aura-chat-typing {
+        display: none;
+        padding: 0.5rem 1rem;
+        color: #8b5cf6;
+        font-size: 0.85rem;
+        font-style: italic;
+    }
+
+    .aura-chat-typing.active {
+        display: block;
+    }
+</style>
+
+<div class="aura-chat-widget">
+    <div class="aura-chat-header">
+        <h3 class="aura-chat-title">
+            <i class="fas fa-robot" style="color: #8b5cf6;"></i>
+            AURA Master
+        </h3>
+        <p class="aura-chat-subtitle">Yapay zeka asistanınız</p>
+    </div>
+
+    <div class="aura-chat-messages-container" id="auraChatMessages">
+        <div class="aura-chat-message ai">
+            <div class="aura-chat-bubble">
+                Merhaba! Ben AURA Master, salon yönetim asistanınız. Size nasıl yardımcı olabilirim?
+            </div>
+        </div>
+    </div>
+
+    <div class="aura-chat-typing" id="auraChatTyping">AI yazıyor...</div>
+
+    <div class="aura-chat-input-area">
+        <input type="text" class="aura-chat-input" id="auraChatInput"
+            placeholder="AURA'ya sorun... (Örn: Bu ay kaç randevu tamamlandı?)">
+        <button class="aura-chat-send-btn" id="auraChatSendBtn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const messagesContainer = document.getElementById('auraChatMessages');
+        const input = document.getElementById('auraChatInput');
+        const sendBtn = document.getElementById('auraChatSendBtn');
+        const typing = document.getElementById('auraChatTyping');
+
+        function addMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `aura-chat-message ${type}`;
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'aura-chat-bubble';
+            bubbleDiv.textContent = text;
+
+            messageDiv.appendChild(bubbleDiv);
+            messagesContainer.appendChild(messageDiv);
+
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+
+            // Show typing indicator
+            typing.classList.add('active');
+
+            try {
+                const response = await fetch('/api/ai/patron/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                    body: JSON.stringify({ message, history: [] })
+                });
+
+                const data = await response.json();
+
+                // Hide typing indicator
+                typing.classList.remove('active');
+
+                if (data.success) {
+                    addMessage(data.response, 'ai');
+                } else {
+                    addMessage('Şu an sistemde bir yoğunluk var, birkaç saniye içinde tekrar dener misin?', 'ai');
+                }
+            } catch (error) {
+                typing.classList.remove('active');
+                addMessage('Bağlantı hatası oluştu. Lütfen tekrar deneyin.', 'ai');
+                console.error('Chat error:', error);
+            }
+        }
+
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    })();
+</script>

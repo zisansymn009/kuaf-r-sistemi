@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Güzelliğin Geleceği</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/aura-ui.css">
+    <style>
+        :root {
+            --aura-primary: #8b5cf6;
+            --aura-secondary: #ec4899;
+            --aura-gold: #cca43b;
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --glass-bg: rgba(15, 23, 42, 0.60);
+            /* More Transparent */
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: blur(24px);
+        }
+
+        body.aura-theme {
+            font-family: var(--font-body);
+            background: #020617;
+            color: #fff;
+            margin: 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* VIBRANT BACKGROUND (Fixing 'Pitch Black' Issue) */
+        .mesh-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.15), transparent 40%),
+                radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.15), transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(204, 164, 59, 0.08), transparent 50%);
+            filter: blur(60px);
+            opacity: 1;
+            /* Was potentially too low before */
+        }
+
+        #auraCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        /* HEADER & BUTTONS (Refined based on User Request) */
+        .aura-header {
+            position: fixed;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 94%;
+            max-width: 1300px;
+            background: rgba(0, 0, 0, 0.3);
+            /* Much more transparent (Glass) */
+            backdrop-filter: blur(12px);
+            /* Lighter blur for clearer view */
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 100px;
+            /* Full pill shape as seen in image */
+            padding: 0.6rem 2rem;
+            z-index: 2000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
+        }
+
+        .aura-logo {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: 0.02em;
+            color: #ffffff;
+            /* Jilet gibi beyaz */
+            background: none;
+            /* No gradient */
+            -webkit-text-fill-color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        /* BUTTONS (Match Image: Dark, Pill, Icon) */
+        .header-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            padding: 0.7rem 1.4rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn.primary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .nav-btn.primary:hover {
+            border-color: var(--aura-primary);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+        }
+
+        /* MOBILE MENU STYLES */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 2100;
+        }
+
+        .menu-toggle span {
+            width: 30px;
+            height: 2px;
+            background: #fff;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .aura-header {
+                padding: 0.8rem 1.5rem;
+                width: 90%;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .header-buttons {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: rgba(10, 15, 30, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                padding: 4rem 2rem;
+                transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                border-left: 1px solid rgba(255, 255, 255, 0.1);
+                z-index: 2050;
+            }
+
+            .header-buttons.active {
+                right: 0;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .menu-toggle.active span:nth-child(1) {
+                transform: translateY(8px) rotate(45deg);
+            }
+
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.active span:nth-child(3) {
+                transform: translateY(-8px) rotate(-45deg);
+            }
+        }
+
+        /* HERO AREA (Scroll Animation Target) */
+        .aura-main-hub {
+            padding-top: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-bottom: 6rem;
+            perspective: 1000px;
+        }
+
+        #hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+            width: 100%;
+            padding: 0 1rem;
+        }
+
+        .page-title {
+            font-family: var(--font-heading);
+            font-weight: 900;
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            line-height: 1.1;
+            letter-spacing: -0.05em;
+            margin-bottom: 1.5rem;
+            padding: 0.1em 0;
+            background: linear-gradient(180deg, #FFFFFF 10%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            text-transform: capitalize;
+            filter: drop-shadow(0 10px 50px rgba(0, 0, 0, 0.7));
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 4rem;
+            font-weight: 400;
+            text-align: center;
+            max-width: 700px;
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+        }
+
+        /* CHAT CAPSULE (Expanded) */
+        .chat-capsule {
+            width: 92%;
+            max-width: 950px;
+            background: rgba(10, 15, 30, 0.5);
+            /* Slightly clearer */
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 40px;
+            padding: 2.5rem;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 8rem;
+            position: relative;
+            z-index: 20;
+            transition: transform 0.4s ease;
+        }
+
+        .chat-messages {
+            height: 220px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            padding-right: 15px;
+        }
+
+        .bubble {
+            padding: 1.25rem 1.75rem;
+            border-radius: 20px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            max-width: 85%;
+        }
+
+        .bubble.ai {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            align-self: flex-start;
+            color: #e2e8f0;
+            border-bottom-left-radius: 4px;
+        }
+
+        .bubble.user {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            align-self: flex-end;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-input-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            padding: 0.75rem 0.75rem 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .chat-input-box:focus-within {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: var(--aura-primary);
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.2);
+        }
+
+        .chat-input-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.15rem;
+            outline: none;
+            font-family: var(--font-body);
+        }
+
+        .send-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: none;
+            background: var(--aura-primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            background: var(--aura-secondary);
+            transform: scale(1.1);
+        }
+
+        /* FEATURES (Hover Expand Animation) */
+        .features-section {
+            width: 92%;
+            max-width: 1300px;
+            margin-top: 4rem;
+            margin-bottom: 6rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-family: var(--font-heading);
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            letter-spacing: -0.04em;
+        }
+
+        .features-wrapper {
+            display: flex;
+            gap: 1.5rem;
+            height: 380px;
+            perspective: 1000px;
+        }
+
+        .feature-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            padding: 2.5rem;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* HOVER EXPAND EFFECT */
+        .feature-card:hover {
+            flex: 2;
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: translateY(0);
+            color: #fff;
+            background: var(--aura-primary);
+        }
+
+        .feature-card:hover h3 {
+            font-size: 1.8rem;
+            color: #fff;
+        }
+
+        .feature-card:hover p {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        .features-wrapper:hover .feature-card:not(:hover) {
+            opacity: 0.6;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: #a78bfa;
+            margin-bottom: auto;
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s;
+        }
+
+        .feature-content h3 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0 0 1rem 0;
+            color: #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .feature-content p {
+            color: #94a3b8;
+            line-height: 1.5;
+            font-size: 0.95rem;
+            opacity: 0;
+            transform: translateY(10px);
+            display: none;
+            transition: all 0.4s;
+        }
+
+        /* FOOTER */
+        .aura-footer {
+            width: 100%;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            background: #020617;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.02em;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .features-wrapper {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .feature-card {
+                height: auto;
+                min-height: 180px;
+                width: 100%;
+                flex: none !important;
+                padding: 1.5rem;
+            }
+
+            .feature-card:hover {
+                height: auto;
+                transform: scale(1.02);
+            }
+
+            .feature-content p {
+                display: block;
+                opacity: 1;
+                transform: none;
+                margin-top: 0.5rem;
+            }
+
+            .page-title {
+                font-size: 3rem;
+            }
+
+            .chat-capsule {
+                padding: 1.5rem;
+                margin-bottom: 4rem;
+                border-radius: 24px;
+            }
+
+            .chat-messages {
+                height: 300px;
+            }
+
+            .bubble {
+                font-size: 0.95rem;
+                padding: 1rem;
+            }
+        }
+
+        /* MODAL & SCRIPTS */
+        .aura-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .aura-modal-content {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            width: 100%;
+            max-width: 850px;
+            padding: 4rem;
+            position: relative;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.9);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .aura-modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .wizard-step-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+            padding: 0 2rem;
+        }
+
+        .wizard-step-container::after {
+            content: "";
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+
+        .step-num {
+            width: 40px;
+            height: 40px;
+            background: #1e293b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            position: relative;
+            font-weight: 700;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .wizard-step.active .step-num {
+            background: var(--aura-primary);
+            border-color: var(--aura-primary);
+        }
+
+        /* WIZARD PREMIUM STYLES */
+        .wizard-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .location-filters {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 2rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .location-filters {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .aura-modal-content {
+                padding: 2rem 1.5rem;
+                border-radius: 24px;
+            }
+
+            .wizard-title {
+                font-size: 1.5rem;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label i {
+            color: var(--aura-primary);
+        }
+
+        .aura-input,
+        select {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 1rem 1.25rem;
+            border-radius: 14px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            width: 100%;
+        }
+
+        select option {
+            background: #0f172a;
+            color: white;
+        }
+
+        .aura-input:focus,
+        select:focus {
+            border-color: var(--aura-primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .salon-grid,
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .salon-card,
+        .service-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .salon-card:hover,
+        .service-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .salon-card.selected,
+        .service-card.selected {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--aura-primary);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        .salon-card.selected::after {
+            content: "\f058";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            color: var(--aura-primary);
+            font-size: 1.25rem;
+        }
+
+        .salon-card h4 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .wizard-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-box {
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px dashed rgba(99, 102, 241, 0.3);
+            padding: 2rem;
+            border-radius: 24px;
+            margin-bottom: 2rem;
+        }
+
+        .mt-md {
+            margin-top: 1.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Scroll Animation for Header */
+        .aura-header.scrolled {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(24px);
+            padding: 0.5rem 1.5rem;
+            width: 85%;
+            top: 20px;
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body class="aura-theme">
+    <canvas id="auraCanvas"></canvas>
+    <!-- Background Meshes -->
+    <div class="mesh-bg"></div>
+
+    <header class="aura-header">
+        <div class="aura-logo">AURA</div>
+        <div class="menu-toggle" id="mobileMenuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="header-buttons" id="navLinks">
+            <button class="nav-btn primary" onclick="openAuraModal('bookingModal'); closeMobileMenu();">
+                <i class="fas fa-calendar-check"></i> Randevu
+            </button>
+            <a href="/login.html" class="nav-btn">GİRİŞ</a>
+        </div>
+    </header>
+
+    <main class="aura-main-hub">
+        <!-- HERO (Animated) -->
+        <div id="hero-content">
+            <h1 class="page-title">Güzelliğin Geleceği</h1>
+            <p class="page-subtitle">Yapay zeka asistanınız Aura ile tanışın. Stilinizi analiz edin, randevu alın ve
+                özel fırsatları yakalayın.</p>
+        </div>
+
+        <!-- CHAT -->
+        <div class="chat-capsule">
+            <div class="chat-messages" id="hubMessages">
+                <div class="bubble ai">Hoş geldiniz ✨ Ben Aura. Güzellik ve saç tasarımı konusundaki uzmanlığımla
+                    buradayım. Bugün hangi teknik değişim veya tasarım planı üzerine yoğunlaşalım? Saçınız için
+                    profesyonel bir analiz isterseniz fotoğrafınızı paylaşmanız yeterli; sizin için en doğru reçeteyi
+                    hazırlayacağım. 💎</div>
+            </div>
+            <div class="chat-input-box">
+                <input type="file" id="visionInput" accept="image/*" style="display: none;"
+                    onchange="handleVisionUpload(this)">
+                <button class="icon-btn" onclick="document.getElementById('visionInput').click()"
+                    title="Fotoğraf Yükle">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <input type="text" id="hubChatInput" placeholder="Aura'ya fısılda... (Örn: Saç kaynak fiyatları nedir?)"
+                    onkeypress="if(event.key === 'Enter') sendHubMessage()">
+                <button class="send-btn" onclick="sendHubMessage()">
+                    <i class="fas fa-paper-plane" style="transform: rotate(45deg); margin-right: -2px;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- FEATURES -->
+        <div class="features-section">
+            <h2 class="section-title">Neden Aura?</h2>
+            <div class="features-wrapper">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+                    <div class="feature-content">
+                        <h3>AI Stil Analizi</h3>
+                        <p>Yüz şeklinize ve tarzınıza en uygun modelleri yapay zeka desteğiyle keşfedin. Bilimsel ve
+                            estetik.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="feature-content">
+                        <h3>Hızlı Randevu</h3>
+                        <p>3 adımda müsaitlik durumunu sorgulayın, kuaförünüzü seçin ve rezervasyonunuzu tamamlayın.</p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-gem"></i></div>
+                    <div class="feature-content">
+                        <h3>Premium Hizmet</h3>
+                        <p>Her detayında VIP hissi veren, size özel hatırlatmalarla kişiselleştirilmiş salon deneyimi.
+                        </p>
+                    </div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shield-halved"></i></div>
+                    <div class="feature-content">
+                        <h3>Güvenli Ödeme</h3>
+                        <p>Uçtan uca şifreleme ve güvenli altyapı ile ödemeleriniz her zaman güvende.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="aura-footer">
+        <div class="footer-logo">AURA</div>
+
+        <!-- Contact Info Section -->
+        <div style="margin: 1.5rem 0; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+            <p style="color: #e2e8f0; font-size: 1.1rem; font-weight: 600; margin: 0;">Zişan Seymen</p>
+            <a href="tel:+905321538009"
+                style="color: #94a3b8; text-decoration: none; font-size: 0.95rem; transition: color 0.3s;"
+                onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">
+                +90 532 153 80 09
+            </a>
+
+            <a href="https://wa.me/905321538009" target="_blank" style="
+                margin-top: 0.5rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: #25D366;
+                color: #fff;
+                padding: 0.6rem 1.2rem;
+                border-radius: 100px;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.9rem;
+                transition: transform 0.2s;
+            " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fab fa-whatsapp" style="font-size: 1.1rem;"></i>
+                WhatsApp ile İletişime Geç
+            </a>
+        </div>
+
+        <p style="color: #64748b; font-size: 0.8rem;">© 2026 By Seymen</p>
+    </footer>
+
+    <!-- Booking Modal Placeholders -->
+    <div id="bookingModal" class="aura-modal">
+        <div class="aura-modal-content">
+            <button class="aura-modal-close" onclick="closeAuraModal('bookingModal')">×</button>
+            <div class="wizard-step-container">
+                <div class="wizard-step active" data-step="1">
+                    <div class="step-num">1</div>
+                </div>
+                <div class="wizard-step" data-step="2">
+                    <div class="step-num">2</div>
+                </div>
+                <div class="wizard-step" data-step="3">
+                    <div class="step-num">3</div>
+                </div>
+                <div class="wizard-step" data-step="4">
+                    <div class="step-num">4</div>
+                </div>
+            </div>
+
+            <!-- STEP 1: LOKASYON & SALON -->
+            <div class="wizard-panel" id="step1">
+                <h2 class="wizard-title">Size En Yakın Salonu Keşfedin</h2>
+                <div class="location-filters">
+                    <div class="filter-group">
+                        <label><i class="fas fa-city"></i> İl</label>
+                        <select id="citySelect" onchange="handleCityChange()">
+                            <option value="">İl Seçiniz</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label><i class="fas fa-map-marker-alt"></i> İlçe</label>
+                        <select id="districtSelect" onchange="loadSalonsByLocation()">
+                            <option value="">İlçe Seçiniz</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="salonList" class="salon-grid"></div>
+            </div>
+
+            <!-- STEP 2: HİZMET SEÇİMİ -->
+            <div class="wizard-panel hidden" id="step2">
+                <h2 class="wizard-title">Hizmet Seçiniz</h2>
+                <div id="serviceList" class="service-grid"></div>
+            </div>
+
+            <!-- STEP 3: TARİH & SAAT -->
+            <div class="wizard-panel hidden" id="step3">
+                <h2 class="wizard-title">Randevu Zamanı</h2>
+                <div class="grid-2">
+                    <div class="filter-group">
+                        <label>Tarih Seçiniz</label>
+                        <input type="date" id="appointmentDate" class="aura-input">
+                    </div>
+                    <div id="availabilityList" class="slots-container">
+                        <p class="text-muted">Önce tarih seçiniz...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4: MÜŞTERİ BİLGİLERİ -->
+            <div class="wizard-panel hidden" id="step4">
+                <h2 class="wizard-title">Bilgilerinizi Tamamlayın</h2>
+                <div id="bookingSummary" class="summary-box"></div>
+                <div class="grid-2 mt-md">
+                    <input type="text" id="customerName" class="aura-input" placeholder="Ad Soyad">
+                    <input type="tel" id="customerPhone" class="aura-input" placeholder="Telefon (05XX...)">
+                </div>
+            </div>
+
+            <div class="wizard-actions">
+                <button id="prevBtn" class="nav-btn ghost hidden">GERİ</button>
+                <button id="nextBtn" class="nav-btn primary">DEVAM ET</button>
+                <button id="submitBtn" class="nav-btn primary hidden">RANDEVU OLUŞTUR</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/utils.js"></script>
+    <script src="/js/aura-ui.js"></script>
+    <script src="/js/landing.js"></script>
+    <script>
+        function openAuraModal(id) { document.getElementById(id).style.display = 'flex'; document.body.style.overflow = 'hidden'; if (id === 'bookingModal') { currentStep = 1; updateWizard(); } }
+        function closeAuraModal(id) { document.getElementById(id).style.display = 'none'; document.body.style.overflow = 'auto'; }
+        let chatHistory = []; // Local history state
+
+        async function sendHubMessage() {
+            const input = document.getElementById('hubChatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // User Message
+            const messagesDiv = document.getElementById('hubMessages');
+            messagesDiv.innerHTML += `<div class="bubble user">${message}</div>`;
+            input.value = '';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            // Add to history
+            chatHistory.push({ sender: 'user', text: message });
+
+            // Loading State
+            const loadingId = 'loading-' + Date.now();
+            messagesDiv.innerHTML += `<div id="${loadingId}" class="bubble ai">...</div>`;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            try {
+                const response = await fetch('/api/ai/public/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        history: chatHistory
+                    })
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                if (data.success) {
+                    messagesDiv.innerHTML += `<div class="bubble ai">${data.response}</div>`;
+                    // Add to history
+                    chatHistory.push({ sender: 'ai', text: data.response });
+                } else {
+                    messagesDiv.innerHTML += `<div class="bubble ai">Üzgünüm, şu an bağlantıda bir sorun yaşıyorum. Lütfen 'Randevu' butonunu kullanarak ilerleyiniz.</div>`;
+                }
+            } catch (error) {
+                console.error('Chat error:', error);
+                if (document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+                messagesDiv.innerHTML += `<div class="bubble ai">Bağlantı hatası oluştu.</div>`;
+            }
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        async function handleVisionUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            const messagesDiv = document.getElementById('hubMessages');
+            messagesDiv.innerHTML += `<div class="bubble user">📸 Görsel analizi başlatıldı (Aura inceliyor...)</div>`;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            const loadingId = 'loading-' + Date.now();
+            messagesDiv.innerHTML += `<div id="${loadingId}" class="bubble ai">...</div>`;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            try {
+                const response = await fetch('/api/ai/vision/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                document.getElementById(loadingId).remove();
+
+                if (data.success) {
+                    messagesDiv.innerHTML += `<div class="bubble ai">${data.response}</div>`;
+                } else {
+                    // Show specific error from backend (Quota, Safety, etc.)
+                    messagesDiv.innerHTML += `<div class="bubble ai">${data.response || 'Bir hata oluştu.'}</div>`;
+                }
+            } catch (error) {
+                console.error('Vision error:', error);
+                document.getElementById(loadingId).remove();
+                messagesDiv.innerHTML += `<div class="bubble ai">Bağlantı hatası oluştu.</div>`;
+            }
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            input.value = ''; // Reset file input
+        }
+
+        // --- CINEMATIC SCROLL ANIMATION ---
+        window.addEventListener('scroll', () => {
+            const y = window.scrollY;
+            const hero = document.getElementById('hero-content');
+            const title = document.querySelector('.page-title');
+            const header = document.querySelector('.aura-header');
+
+            // Header Animation
+            if (header) {
+                if (y > 50) header.classList.add('scrolled');
+                else header.classList.remove('scrolled');
+            }
+
+            if (hero && title) {
+                // 1. Container Effects
+                const opacity = Math.max(0, 1 - (y * 0.0025));
+                const blur = Math.min(20, y * 0.04);
+
+                hero.style.opacity = opacity;
+                hero.style.transform = `translateY(${y * 0.2}px)`; // Removed blur for mobile performance
+
+                // 2. Title Specific "Stretching" (Uzama) Effect
+                // Scale smooths it out, Letter-spacing creates the "stretch"
+                const scale = 1 + (y * 0.0008);
+                // Start from -0.05em and expand outwards
+                const currentSpacing = -0.05 + (y * 0.0002);
+
+                title.style.transform = `scale(${scale})`;
+                title.style.letterSpacing = `${currentSpacing}em`;
+            }
+        });
+        document.addEventListener('DOMContentLoaded', () => { if (typeof initParticles === 'function') initParticles(); });
+    </script>
+</body>
+
+</html>

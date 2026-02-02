@@ -1,0 +1,3434 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patron Paneli - Kuaför Aura</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/aura-ui.css">
+    <link rel="stylesheet" href="/css/dashboard-aura.css">
+
+</head>
+
+<body class="dashboard-aura">
+    <div class="aura-bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Mobile Header -->
+    <div class="dashboard-mobile-header">
+        <h2 style="font-size: 1.5rem; margin: 0;">AURA</h2>
+        <div class="menu-trigger" onclick="toggleSidebar()"
+            style="cursor: pointer; font-size: 1.5rem; color: var(--aura-primary);">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 950;">
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar-aura">
+        <div class="sidebar-header-aura">
+            <h2>AURA</h2>
+            <p id="userInfo" class="text-muted" style="font-size: 0.85rem; margin-top: 0.5rem;"></p>
+        </div>
+        <nav class="sidebar-menu">
+            <div class="menu-item-aura active" data-page="dashboard">
+                <i class="fas fa-home"></i> <span>Dashboard</span>
+            </div>
+            <div class="menu-item-aura" data-page="appointments">
+                <i class="fas fa-calendar-alt"></i> <span>Randevular</span>
+            </div>
+            <div class="menu-item-aura" data-page="analytics">
+                <i class="fas fa-chart-line"></i> <span>Analitik</span>
+            </div>
+            <div class="menu-item-aura" data-page="staff">
+                <i class="fas fa-users"></i> <span>Personel</span>
+            </div>
+            <div class="menu-item-aura" data-page="catalog">
+                <i class="fas fa-list"></i> <span>Katalog</span>
+            </div>
+            <div class="menu-item-aura" data-page="stock">
+                <i class="fas fa-boxes"></i> <span>Stok</span>
+            </div>
+
+            <div class="menu-item-aura" data-page="finance">
+                <i class="fas fa-wallet"></i> <span>Finans</span>
+            </div>
+            <div class="menu-item-aura" data-page="settings">
+                <i class="fas fa-cog"></i> <span>Ayarlar</span>
+            </div>
+        </nav>
+        <div class="sidebar-footer-aura">
+            <div class="logout-btn-aura" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> <span>Çıkış</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content-aura">
+        <!-- Dashboard Home -->
+        <div id="dashboardPage" class="page-content">
+            <div class="flex-between mb-lg">
+                <h1>Salon Özeti</h1>
+            </div>
+
+            <!-- Stats Grid -->
+            <div id="statsGrid" class="grid grid-4 mb-lg">
+                <!-- Stats will be loaded via JS -->
+            </div>
+
+            <div class="grid grid-2" style="margin-top: 3rem;">
+                <div class="aura-card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-calendar-alt text-primary"></i> Bugünün Bekleyen
+                            Randevuları</h3>
+                    </div>
+                    <div id="pendingAppointments">
+                        <!-- JS ile yüklenecek -->
+                    </div>
+                </div>
+
+                <div class="aura-card" id="pendingStaffCard">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-users text-primary"></i> Onay Bekleyen Personel
+                        </h3>
+                    </div>
+                    <div id="pendingStaffList">
+                        <!-- JS ile yüklenecek -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Summary -->
+            <div class="aura-card mt-lg">
+                <div class="card-header flex-between">
+                    <h3 class="card-title"><i class="fas fa-chart-pie text-accent"></i> Analitik Özeti</h3>
+                    <button class="nav-btn nav-btn-primary btn-sm" onclick="navigateToAnalytics()">Detaylı
+                        Analitik
+                        →</button>
+                </div>
+                <div style="padding: 1.5rem;">
+                    <div class="grid grid-2 gap-lg">
+                        <!-- Top Customers Widget -->
+                        <div class="aura-card"
+                            style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.03);">
+                            <h4
+                                style="margin-bottom: 1rem; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                <i class="fas fa-crown text-primary" style="margin-right: 0.5rem;"></i> En Sadık
+                                Müşteriler
+                            </h4>
+                            <div id="topCustomersWidget">
+                                <p class="text-muted">Yükleniyor...</p>
+                            </div>
+                        </div>
+                        <!-- Popular Services Widget -->
+                        <div class="aura-card"
+                            style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.03);">
+                            <h4
+                                style="margin-bottom: 1rem; color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                                <i class="fas fa-magic text-primary" style="margin-right: 0.5rem;"></i> Popüler
+                                Hizmetler
+                            </h4>
+                            <div id="popularServicesWidget">
+                                <p class="text-muted">Yükleniyor...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="aura-card mt-lg">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-line text-primary"></i> Gelir Trendi (Son 7
+                        Gün)
+                    </h3>
+                </div>
+                <div style="padding: 1.5rem;">
+                    <canvas id="revenueChart" style="max-height: 250px;"></canvas>
+                </div>
+            </div>
+
+            <!-- Pending Staff Approvals -->
+            <div class="aura-card mt-lg" id="pendingStaffCard" style="display: none;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-user-clock text-warning"></i> Bekleyen Personel
+                        Onayları
+                    </h3>
+                </div>
+                <div id="pendingStaffList" style="padding: 1.5rem;"></div>
+            </div>
+
+            <div class="aura-card mt-lg">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-star text-primary"></i> Personel Performansı</h3>
+                </div>
+                <div id="staffPerformance" style="padding: 0;"></div>
+            </div>
+        </div>
+
+        <!-- Finance Page -->
+        <div id="financePage" class="page-content hidden">
+            <!-- Finance Header & Action Buttons -->
+            <div class="flex-between mb-lg" style="align-items: flex-end;">
+                <div>
+                    <h1 class="mb-xs">Finansal Durum</h1>
+                    <p class="text-muted small">Salonunuzun gelir, gider ve kâr marjlarını buradan yönetin.</p>
+                </div>
+                <div class="flex gap-md">
+                    <button class="nav-btn nav-btn-primary" onclick="showTransactionModal('income')"
+                        style="padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);">
+                        <div
+                            style="width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-plus" style="font-size: 0.8rem;"></i>
+                        </div>
+                        <span style="font-weight: 700;">GELİR EKLE</span>
+                    </button>
+                    <button class="nav-btn" onclick="showTransactionModal('expense')"
+                        style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <div
+                            style="width: 24px; height: 24px; border-radius: 50%; background: rgba(239, 68, 68, 0.1); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-minus" style="font-size: 0.8rem;"></i>
+                        </div>
+                        <span style="font-weight: 700;">GİDER EKLE</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Finance Stats Grid -->
+            <div id="financeStatsGrid" class="grid grid-4 mb-lg">
+                <!-- Loaded via JS -->
+            </div>
+
+            <div class="grid grid-3-1 gap-lg">
+                <div class="aura-card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-chart-area text-accent"></i> Gelir & Gider Analizi</h3>
+                    </div>
+                    <div style="padding: 1.5rem;">
+                        <canvas id="financeTrendChart" height="300"></canvas>
+                    </div>
+                </div>
+                <div class="aura-card">
+                    <div class="card-header">
+                        <h3 class="card-title text-success"><i class="fas fa-arrow-up"></i> Son Gelirler</h3>
+                    </div>
+                    <div id="recentIncomes" style="padding: 1rem;">
+                        <!-- Loaded via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="aura-card mt-lg">
+                <div class="card-header flex-between">
+                    <h3 class="card-title"><i class="fas fa-history text-primary"></i> İşlem Geçmişi</h3>
+                    <div class="flex gap-sm">
+                        <select id="financePeriod" class="form-input btn-sm" onchange="loadFinance()">
+                            <option value="today">Bugün</option>
+                            <option value="week">Bu Hafta</option>
+                            <option value="month" selected>Bu Ay</option>
+                            <option value="year">Bu Yıl</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="padding: 0;">
+                    <table class="table-aura" id="financeTable">
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Tür</th>
+                                <th>Açıklama</th>
+                                <th>Miktar</th>
+                                <th>İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settingsPage" class="page-content hidden">
+            <div class="mb-lg">
+                <h1>Salon Ayarları</h1>
+            </div>
+
+            <div class="grid grid-2-3 gap-lg">
+                <div class="aura-card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-store text-primary"></i> Salon Profili</h3>
+                    </div>
+                    <form id="salonSettingsForm" style="padding: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Salon Adı</label>
+                            <input type="text" name="salon_name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telefon</label>
+                            <input type="tel" name="phone" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">E-posta</label>
+                            <input type="email" name="email" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Adres</label>
+                            <textarea name="address" class="form-input" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="nav-btn nav-btn-primary w-full mt-md">Değişiklikleri
+                            Kaydet</button>
+                    </form>
+                </div>
+
+                <div class="aura-card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-clock text-accent"></i> Çalışma Saatleri</h3>
+                    </div>
+                    <div style="padding: 0;">
+                        <table class="table-aura" id="salonHoursTable">
+                            <thead>
+                                <tr>
+                                    <th>Gün</th>
+                                    <th>Açılış</th>
+                                    <th>Kapanış</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Loaded via JS -->
+                            </tbody>
+                        </table>
+                        <div style="padding: 1.5rem;" class="flex-end">
+                            <button class="nav-btn nav-btn-primary" onclick="saveSalonHours()">Çalışma Saatlerini
+                                Kaydet</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="aura-card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-lock text-warning"></i> Şifre Değiştir</h3>
+                    </div>
+                    <form id="passwordSettingsForm" style="padding: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label">Güncel Şifre</label>
+                            <input type="password" name="oldPassword" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Yeni Şifre</label>
+                            <input type="password" name="newPassword" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Yeni Şifre (Tekrar)</label>
+                            <input type="password" name="confirmPassword" class="form-input" required>
+                        </div>
+                        <button type="submit" class="nav-btn nav-btn-primary w-full mt-md">Şifreyi Güncelle</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Page -->
+        <div id="appointmentsPage" class="page-content hidden">
+            <div class="flex-between mb-lg">
+                <div class="flex">
+                    <i class="fas fa-calendar-check text-primary" style="font-size: 1.5rem;"></i>
+                    <h1 style="margin: 0;">Randevu Yönetimi</h1>
+                </div>
+                <button class="nav-btn nav-btn-primary" onclick="openAppointmentModal()">
+                    <i class="fas fa-plus"></i> Manuel Randevu Oluştur
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="aura-card mb-lg">
+                <div class="grid grid-4">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">DURUM</label>
+                        <select id="filterStatus" class="form-input" onchange="loadAppointments()">
+                            <option value="">Tümü</option>
+                            <option value="pending">Bekliyor</option>
+                            <option value="completed">Tamamlandı</option>
+                            <option value="cancelled">İptal</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">PERSONEL</label>
+                        <select id="filterStaff" class="form-input" onchange="loadAppointments()">
+                            <option value="">Tümü</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">BAŞLANGIÇ</label>
+                        <input type="date" id="filterDateFrom" class="form-input" onchange="loadAppointments()">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">BİTİŞ</label>
+                        <input type="date" id="filterDateTo" class="form-input" onchange="loadAppointments()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="aura-card">
+                <table class="table-aura" id="appointmentsTable">
+                    <thead>
+                        <tr>
+                            <th>Tarih/Saat</th>
+                            <th>Müşteri</th>
+                            <th>Hizmet</th>
+                            <th>Personel</th>
+                            <th>Fiyat</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analytics Page -->
+        <div id="analyticsPage" class="page-content hidden">
+            <div class="flex-between mb-lg">
+                <h1><i class="fas fa-chart-bar text-primary"></i> Detaylı Analitik</h1>
+                <div class="aura-card" style="padding: 0.5rem 1.5rem; display: flex; gap: 1rem; align-items: center;">
+                    <label style="font-size: 0.8rem; font-weight: 700; color: #94a3b8;">DÖNEM:</label>
+                    <select id="dateRangeFilter" class="form-input"
+                        style="width: auto; padding: 0.4rem 1rem; font-size: 0.85rem;">
+                        <option value="7">Son 7 Gün</option>
+                        <option value="30" selected>Son 30 Gün</option>
+                        <option value="90">Son 3 Ay</option>
+                        <option value="365">Son 1 Yıl</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="aura-card" style="padding: 0;">
+                <div class="modal-tabs">
+                    <div class="modal-tab active" data-tab="customers" onclick="switchAnalyticsTab('customers')">Müşteri
+                        Analizi</div>
+                    <div class="modal-tab" data-tab="services" onclick="switchAnalyticsTab('services')">Hizmet
+                        Analizi</div>
+                    <div class="modal-tab" data-tab="history" onclick="switchAnalyticsTab('history')">Randevu
+                        Geçmişi</div>
+                </div>
+
+                <!-- Customer Analytics Tab -->
+                <div id="customersTab" class="tab-pane active" style="padding: 2.5rem;">
+                    <h3 class="mb-md"><i class="fas fa-crown text-accent"></i> En Değerli Müşteriler</h3>
+                    <div id="topCustomersTable"></div>
+                </div>
+
+                <!-- Services Analytics Tab -->
+                <div id="servicesTab" class="tab-pane" style="padding: 2.5rem;">
+                    <h3 class="mb-md"><i class="fas fa-magic text-primary"></i> Popüler Hizmetler</h3>
+                    <div class="grid grid-2 mb-lg">
+                        <div class="aura-card" style="background: rgba(0,0,0,0.2);">
+                            <canvas id="servicesBarChart" style="max-height: 300px;"></canvas>
+                        </div>
+                        <div class="aura-card" style="background: rgba(0,0,0,0.2);">
+                            <canvas id="servicesPieChart" style="max-height: 300px;"></canvas>
+                        </div>
+                    </div>
+                    <div id="popularServicesTable"></div>
+                </div>
+
+                <!-- Appointment History Tab -->
+                <div id="historyTab" class="tab-pane" style="padding: 2.5rem;">
+                    <div class="flex-between mb-md">
+                        <h3><i class="fas fa-history text-primary"></i> Randevu Geçmişi</h3>
+                        <select id="statusFilter" class="form-input" style="width: auto; padding: 0.4rem 1rem;">
+                            <option value="">Tüm Durumlar</option>
+                            <option value="completed">Tamamlandı</option>
+                            <option value="cancelled">İptal Edildi</option>
+                            <option value="pending">Bekliyor</option>
+                        </select>
+                    </div>
+                    <div id="appointmentsHistoryTable"></div>
+                    <div id="paginationControls" class="mt-lg" style="text-align: center;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staff Management Page -->
+        <div id="staffPage" class="page-content hidden">
+            <div class="flex-between mb-lg">
+                <div class="flex">
+                    <i class="fas fa-users text-primary" style="font-size: 1.5rem;"></i>
+                    <h1 style="margin: 0;">Personel Yönetimi</h1>
+                </div>
+                <button class="nav-btn nav-btn-primary" onclick="showAddStaffModal()">
+                    <i class="fas fa-user-plus"></i> Yeni Personel Ekle
+                </button>
+            </div>
+
+            <div class="aura-card">
+                <table class="table-aura" id="staffTable">
+                    <thead>
+                        <tr>
+                            <th>Personel</th>
+                            <th>İletişim</th>
+                            <th>Pirim Oranı</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Catalog Management Page -->
+        <div id="catalogPage" class="page-content hidden">
+            <div class="flex-between mb-lg">
+                <div class="flex">
+                    <i class="fas fa-list text-primary" style="font-size: 1.5rem;"></i>
+                    <h1 style="margin: 0;">Hizmet Kataloğu</h1>
+                </div>
+                <button class="nav-btn nav-btn-primary" onclick="showAddServiceModal()">
+                    <i class="fas fa-plus"></i> Yeni Hizmet Ekle
+                </button>
+            </div>
+
+            <div class="aura-card">
+                <table class="table-aura" id="catalogTable">
+                    <thead>
+                        <tr>
+                            <th>Hizmet Adı</th>
+                            <th>Kategori</th>
+                            <th>Fiyat</th>
+                            <th>Süre</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Stock Management Page -->
+        <div id="stockPage" class="page-content hidden">
+            <div class="flex-between mb-lg">
+                <div class="flex">
+                    <i class="fas fa-boxes text-primary" style="font-size: 1.5rem;"></i>
+                    <h1 style="margin: 0;">Stok Yönetimi</h1>
+                </div>
+                <div class="flex gap-md">
+                    <button class="nav-btn" onclick="showFireAnalysis()">
+                        <i class="fas fa-chart-line"></i> Fire Analizi
+                    </button>
+                    <button class="nav-btn" onclick="showCountHistory()">
+                        <i class="fas fa-history"></i> Sayım Geçmişi
+                    </button>
+                    <button class="nav-btn" onclick="showBulkCountModal()">
+                        <i class="fas fa-clipboard-list"></i> Toplu Sayım
+                    </button>
+                    <button class="nav-btn nav-btn-primary" onclick="showAddStockModal()">
+                        <i class="fas fa-plus"></i> Yeni Stok Girişi
+                    </button>
+                </div>
+            </div>
+
+            <div class="aura-card">
+                <table class="table-aura" id="stockTable">
+                    <thead>
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th>Tip</th>
+                            <th>Mevcut Stok</th>
+                            <th>Birim Maliyet</th>
+                            <th>Son Sayım</th>
+                            <th>Fark</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Stock History Page -->
+        <div id="stockHistoryPage" class="page-content hidden">
+            <div class="flex-between mb-lg">
+                <div class="flex">
+                    <button class="nav-btn btn-sm mr-md" onclick="showPage('stock')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <i class="fas fa-history text-primary" style="font-size: 1.5rem; margin-left: 1rem;"></i>
+                    <h1 style="margin: 0;">Sayım Geçmişi</h1>
+                </div>
+                <div class="flex gap-md aura-card p-sm" style="background: rgba(255,255,255,0.03);">
+                    <div class="flex gap-sm align-center">
+                        <span class="small text-muted">Başlangıç:</span>
+                        <input type="date" id="historyStartDate" class="form-input"
+                            style="width: 140px; padding: 0.4rem;">
+                    </div>
+                    <div class="flex gap-sm align-center">
+                        <span class="small text-muted">Bitiş:</span>
+                        <input type="date" id="historyEndDate" class="form-input"
+                            style="width: 140px; padding: 0.4rem;">
+                    </div>
+                    <button class="nav-btn nav-btn-primary btn-sm" onclick="loadCountHistory()">
+                        <i class="fas fa-filter"></i> Filtrele
+                    </button>
+                </div>
+            </div>
+
+            <div class="aura-card">
+                <table class="table-aura" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Tarih</th>
+                            <th>Ürün Adı</th>
+                            <th>Sistem Stoğu</th>
+                            <th>Sayılan</th>
+                            <th>Fark</th>
+                            <th>Notlar</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Fire Analysis Page -->
+        <div id="fireAnalysisPage" class="page-content hidden">
+            <div class="flex-between mb-lg">
+                <div class="flex">
+                    <button class="nav-btn btn-sm mr-md" onclick="showPage('stock')">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <i class="fas fa-chart-line text-primary" style="font-size: 1.5rem; margin-left: 1rem;"></i>
+                    <h1 style="margin: 0;">Fire & Kayıp Analizi</h1>
+                </div>
+            </div>
+
+            <div class="grid grid-4 mb-lg">
+                <div class="aura-card p-lg">
+                    <div class="text-muted small mb-xs">Toplam Fire (Adet/Birim)</div>
+                    <div class="h2 mb-0" id="totalFireQty">0</div>
+                </div>
+                <div class="aura-card p-lg">
+                    <div class="text-muted small mb-xs">Toplam Fire Maliyeti</div>
+                    <div class="h2 mb-0" id="totalFireCost">₺0,00</div>
+                </div>
+                <div class="aura-card p-lg">
+                    <div class="text-muted small mb-xs">En Çok Fire Veren Ürün</div>
+                    <div class="h2 mb-0" id="topFireItem">-</div>
+                </div>
+                <div class="aura-card p-lg">
+                    <div class="text-muted small mb-xs">Fire Oranı</div>
+                    <div class="h2 mb-0" id="fireRate">%0</div>
+                </div>
+            </div>
+
+            <div class="grid grid-2 mb-lg">
+                <div class="aura-card">
+                    <div class="p-lg border-bottom">
+                        <h3 class="m-0">Kategori Bazlı Fire Dağılımı</h3>
+                    </div>
+                    <div class="p-lg" style="height: 300px;">
+                        <canvas id="fireCategoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="aura-card">
+                    <div class="p-lg border-bottom">
+                        <h3 class="m-0">En Çok Kayıp Veren Ürünler</h3>
+                    </div>
+                    <div class="p-lg">
+                        <div id="topFireItemsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+
+    <!-- Staff Details Modal (Pro) -->
+    <div id="staffDetailsModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <div>
+                    <h2 id="staffDetailName">Personel Detayları</h2>
+                    <p class="text-muted" style="font-size: 0.8rem; margin-top: 0.25rem;">Personel çalışma
+                        saatleri, özel pirimler ve avans yönetimi</p>
+                </div>
+                <button class="modal-close" onclick="closeStaffDetailsModal()">×</button>
+            </div>
+
+            <div class="modal-tabs">
+                <div class="modal-tab active" data-tab="commissions" onclick="switchStaffTab('commissions')">
+                    Özel Pirimler</div>
+                <div class="modal-tab" data-tab="hours" onclick="switchStaffTab('hours')">Çalışma Saatleri</div>
+                <div class="modal-tab" data-tab="advances" onclick="switchStaffTab('advances')">Avans & Ödemeler
+                </div>
+            </div>
+
+            <div style="padding: 2rem;">
+                <!-- Commissions Tab -->
+                <div id="tab-commissions" class="tab-pane active">
+                    <p class="text-muted mb-md" style="font-size: 0.85rem;">Bu personele özel hizmet bazlı pirim
+                        oranları belirleyin. Boş bırakılanlar varsayılan oranı kullanır.</p>
+                    <table class="table-aura" id="staffCommissionsTable" style="margin-top: 0;">
+                        <thead>
+                            <tr>
+                                <th>Hizmet</th>
+                                <th>Kategori</th>
+                                <th>Fiyat</th>
+                                <th>Özel Pirim (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="flex-end mt-lg">
+                        <button class="nav-btn nav-btn-primary" onclick="saveStaffCommissions()">
+                            <i class="fas fa-save"></i> Oranları Kaydet
+                        </button>
+                    </div>
+                </div>
+                <!-- Hours Tab -->
+                <div id="tab-hours" class="tab-pane">
+                    <p class="text-muted mb-md" style="font-size: 0.85rem;">Personelin haftalık
+                        standart çalışma saatlerini düzenleyin.</p>
+                    <table class="table-aura" id="staffHoursTable" style="margin-top: 0;">
+                        <thead>
+                            <tr>
+                                <th>Gün</th>
+                                <th>Başlangıç</th>
+                                <th>Bitiş</th>
+                                <th>İzinli</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Days 0-6 will be here -->
+                        </tbody>
+                    </table>
+                    <div class="flex-end mt-lg">
+                        <button class="nav-btn nav-btn-primary" onclick="saveStaffHours()">
+                            <i class="fas fa-save"></i> Saatleri Kaydet
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advances Tab -->
+                <div id="tab-advances" class="tab-pane">
+                    <div class="grid grid-2 mb-lg">
+                        <div class="form-group">
+                            <label class="form-label">Miktar (₺)</label>
+                            <input type="number" id="advanceAmount" class="form-input" placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Açıklama</label>
+                            <input type="text" id="advanceDesc" class="form-input" placeholder="Örn: Haftalık avans">
+                        </div>
+                    </div>
+                    <div class="flex-end mb-lg">
+                        <button class="nav-btn nav-btn-primary" onclick="addStaffAdvance()">
+                            <i class="fas fa-plus"></i> Ödeme Ekle
+                        </button>
+                    </div>
+
+                    <h3 class="mb-md" style="font-size: 1rem;">Son Ödemeler</h3>
+                    <div class="aura-card"
+                        style="padding: 0; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.03);">
+                        <table class="table-aura" id="staffAdvancesTable" style="margin-top: 0;">
+                            <thead>
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Miktar</th>
+                                    <th>Açıklama</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Staff Add Modal -->
+    <div id="staffModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Yeni Personel Ekle</h2>
+                <button class="modal-close" onclick="closeStaffModal()">×</button>
+            </div>
+            <form id="staffForm" style="padding: 2rem;">
+                <div class="form-group">
+                    <label class="form-label">Kullanıcı Adı *</label>
+                    <input type="text" name="username" required class="form-input" placeholder="Örn: ahmet.yilmaz">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Şifre *</label>
+                    <input type="password" name="password" required class="form-input" placeholder="En az 6 karakter">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ad Soyad *</label>
+                    <input type="text" name="full_name" required class="form-input" placeholder="Örn: Ahmet Yılmaz">
+                </div>
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label class="form-label">E-posta</label>
+                        <input type="email" name="email" class="form-input" placeholder="ornek@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Telefon</label>
+                        <input type="tel" name="phone" class="form-input" placeholder="05xx xxx xx xx">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Pirim Oranı (%)</label>
+                    <input type="number" name="commission_rate" class="form-input" min="0" max="100" step="0.01"
+                        value="15" placeholder="15">
+                    <p class="text-muted" style="font-size: 0.75rem; margin-top: 0.5rem;">Varsayılan: %15</p>
+                </div>
+                <div class="flex-end gap-md">
+                    <button type="button" class="nav-btn" onclick="closeStaffModal()">İptal</button>
+                    <button type="submit" class="nav-btn nav-btn-primary">Personeli Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Service Add Modal -->
+    <div id="serviceModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Yeni Hizmet Ekle</h2>
+                <button class="modal-close" onclick="closeServiceModal()">×</button>
+            </div>
+            <form id="serviceForm" style="padding: 2rem;">
+                <div class="form-group">
+                    <label class="form-label">Hizmet Adı *</label>
+                    <input type="text" name="name" required class="form-input" placeholder="Örn: Saç Kesimi">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kategori</label>
+                    <select name="category" class="form-input">
+                        <option value="">Seçiniz</option>
+                        <option value="Saç">Saç</option>
+                        <option value="Makyaj">Makyaj</option>
+                        <option value="Cilt Bakımı">Cilt Bakımı</option>
+                        <option value="Tırnak">Tırnak</option>
+                        <option value="Diğer">Diğer</option>
+                    </select>
+                </div>
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Fiyat (₺) *</label>
+                        <input type="number" name="price" required class="form-input" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Süre (dakika) *</label>
+                        <input type="number" name="duration" required class="form-input" min="15" step="15">
+                    </div>
+                </div>
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Şampuan Kullanımı (gr)</label>
+                        <input type="number" name="shampoo_usage" class="form-input" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Boya Kullanımı (cl)</label>
+                        <input type="number" name="dye_usage" class="form-input" min="0" step="0.1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Açıklama</label>
+                    <textarea name="description" class="form-input" rows="3" style="min-height: 80px;"></textarea>
+                </div>
+                <div class="flex-end gap-md">
+                    <button type="button" class="nav-btn" onclick="closeServiceModal()">İptal</button>
+                    <button type="submit" class="nav-btn nav-btn-primary">Hizmeti Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Stock Add Modal -->
+    <!-- Manual Appointment Modal -->
+    <div id="appointmentModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Randevu Oluştur</h2>
+                <button class="modal-close" onclick="closeAppointmentModal()">×</button>
+            </div>
+            <form id="appointmentForm" style="padding: 2rem;">
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Müşteri Ad Soyad *</label>
+                        <input type="text" name="customer_name" required class="form-input"
+                            placeholder="Örn: Ali Yılmaz">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Müşteri Telefon *</label>
+                        <input type="tel" name="customer_phone" required class="form-input"
+                            placeholder="05xx xxx xx xx">
+                    </div>
+                </div>
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Tarih *</label>
+                        <input type="date" name="appointment_date" required class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Saat *</label>
+                        <input type="time" name="appointment_time" required class="form-input">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Hizmet *</label>
+                    <select name="service_id" id="aptServiceSelect" required class="form-input">
+                        <option value="">Hizmet Seçiniz</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Personel *</label>
+                    <select name="staff_id" id="aptStaffSelect" required class="form-input">
+                        <option value="">Personel Seçiniz</option>
+                    </select>
+                </div>
+                <div class="flex-end gap-md">
+                    <button type="button" class="nav-btn" onclick="closeAppointmentModal()">İptal</button>
+                    <button type="submit" class="nav-btn nav-btn-primary">Randevuyu Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Stock Add Modal -->
+    <div id="stockModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Yeni Stok Girişi</h2>
+                <button class="modal-close" onclick="closeStockModal()">×</button>
+            </div>
+            <form id="stockForm" style="padding: 2rem;">
+                <div class="form-group">
+                    <label class="form-label">Ürün Adı *</label>
+                    <input type="text" name="item_name" required class="form-input" placeholder="Örn: Pantene Şampuan">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tip *</label>
+                    <select name="item_type" required class="form-input">
+                        <option value="">Seçiniz</option>
+                        <option value="shampoo">Şampuan</option>
+                        <option value="dye">Boya</option>
+                        <option value="other">Diğer</option>
+                    </select>
+                </div>
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Miktar *</label>
+                        <input type="number" name="quantity" required class="form-input" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Birim *</label>
+                        <input type="text" name="unit" required class="form-input" placeholder="gr, cl, adet">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Birim Maliyet (₺)</label>
+                    <input type="number" name="unit_cost" required class="form-input" min="0" step="0.01">
+                </div>
+                <div class="flex-end gap-md">
+                    <button type="button" class="nav-btn" onclick="closeStockModal()">İptal</button>
+                    <button type="submit" class="nav-btn nav-btn-primary">Stoğu Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Single Stock Count Modal -->
+    <div id="countModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Stok Sayımı</h2>
+                <button class="modal-close" onclick="closeCountModal()">×</button>
+            </div>
+            <div style="padding: 2rem;">
+                <div class="form-group">
+                    <label class="form-label">Ürün</label>
+                    <input type="text" id="countItemName" readonly class="form-input"
+                        style="background: rgba(255,255,255,0.05);">
+                </div>
+                <div class="grid grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Sistem Stoğu</label>
+                        <input type="text" id="countSystemQty" readonly class="form-input"
+                            style="background: rgba(255,255,255,0.05);">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fiziksel Sayım *</label>
+                        <input type="number" id="countPhysicalQty" class="form-input" min="0" step="0.1"
+                            placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fark</label>
+                    <input type="text" id="countDiscrepancy" readonly class="form-input"
+                        style="background: rgba(255,255,255,0.05); font-weight: 700;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Not (Opsiyonel)</label>
+                    <textarea id="countNotes" class="form-input" rows="3" placeholder="Sayım notu..."></textarea>
+                </div>
+                <div class="flex-end gap-md">
+                    <button type="button" class="nav-btn" onclick="closeCountModal()">İptal</button>
+                    <button type="button" class="nav-btn nav-btn-primary" onclick="saveStockCount()">Sayımı
+                        Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Stock Count Modal -->
+    <div id="bulkCountModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2>Toplu Stok Sayımı</h2>
+                <button class="modal-close" onclick="closeBulkCountModal()">×</button>
+            </div>
+            <div style="padding: 2rem;">
+                <p class="text-muted mb-lg">Tüm ürünler için fiziksel sayım miktarlarını girin. Boş bırakılan ürünler
+                    sayılmayacaktır.</p>
+                <div class="aura-card" style="padding: 0; max-height: 500px; overflow-y: auto;">
+                    <table class="table-aura" id="bulkCountTable" style="margin: 0;">
+                        <thead style="position: sticky; top: 0; background: var(--bg-secondary); z-index: 1;">
+                            <tr>
+                                <th>Ürün</th>
+                                <th>Sistem Stoğu</th>
+                                <th>Fiziksel Sayım</th>
+                                <th>Fark</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="flex-end gap-md mt-lg">
+                    <button type="button" class="nav-btn" onclick="closeBulkCountModal()">İptal</button>
+                    <button type="button" class="nav-btn nav-btn-primary" onclick="saveBulkCount()">Tümünü
+                        Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Recipe Modal -->
+    <div id="recipeModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <div>
+                    <h2 id="recipeModalTitle">Hizmet Reçetesi</h2>
+                    <p class="text-muted small" id="recipeModalSubtitle" style="margin-top: 5px;"></p>
+                </div>
+                <button class="modal-close" onclick="closeRecipeModal()">×</button>
+            </div>
+            <div style="padding: 2rem;">
+                <!-- Add Item Form -->
+                <div class="aura-card mb-lg p-lg"
+                    style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1);">
+                    <div class="grid grid-3 gap-md align-end">
+                        <div class="form-group mb-0">
+                            <label class="form-label small">Ürün Seçin</label>
+                            <select id="recipeProductSelect" class="form-input">
+                                <option value="">Ürün Seçiniz...</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="form-label small">Miktar</label>
+                            <div class="flex align-center gap-xs">
+                                <input type="number" id="recipeQuantity" class="form-input" placeholder="0.00"
+                                    step="0.01">
+                                <span id="recipeUnitLabel" class="text-muted small">birim</span>
+                            </div>
+                        </div>
+                        <button class="nav-btn nav-btn-primary" onclick="addRecipeItem()" style="height: 48px;">
+                            <i class="fas fa-plus"></i> Ekle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recipe Table -->
+                <div class="aura-card" style="padding: 0;">
+                    <table class="table-aura" id="recipeTable" style="margin: 0;">
+                        <thead>
+                            <tr>
+                                <th>Ürün</th>
+                                <th>Miktar</th>
+                                <th>Maliyet</th>
+                                <th style="text-align: right;">İşlem</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr style="background: rgba(255,255,255,0.02);">
+                                <td colspan="2"><strong class="text-white">Toplam Tahmini Maliyet:</strong></td>
+                                <td><strong class="text-success" id="totalRecipeCost">₺0.00</strong></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Transaction Modal (Income/Expense) -->
+    <div id="transactionModal" class="modal hidden">
+        <div class="modal-content"
+            style="max-width: 450px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+            <div class="modal-header"
+                style="background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.03); padding: 1.5rem 2rem;">
+                <h2 id="transactionModalTitle" style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em;">
+                    Yeni İşlem</h2>
+                <button class="modal-close" onclick="closeTransactionModal()">×</button>
+            </div>
+            <form id="transactionForm" style="padding: 2rem;">
+                <input type="hidden" name="type" id="transactionType">
+
+                <div class="form-group mb-lg">
+                    <label class="form-label"
+                        style="text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; font-weight: 800; color: #94a3b8; margin-bottom: 0.75rem;">Miktar
+                        (₺)</label>
+                    <div style="position: relative;">
+                        <span
+                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-weight: 700;">₺</span>
+                        <input type="number" name="amount" id="transactionAmount" required class="form-input" min="0"
+                            step="0.01" placeholder="0.00"
+                            style="padding-left: 2.5rem; font-size: 1.25rem; font-weight: 800; border-radius: var(--radius-md);">
+                    </div>
+                </div>
+
+                <div class="form-group mb-lg">
+                    <label class="form-label"
+                        style="text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; font-weight: 800; color: #94a3b8; margin-bottom: 0.75rem;">İşlem
+                        Açıklaması</label>
+                    <input type="text" name="description" id="transactionDesc" required class="form-input"
+                        placeholder="Örn: Kira ödemesi, Ek Hizmet vb."
+                        style="padding: 1rem; border-radius: var(--radius-md);">
+                </div>
+
+                <div class="form-group mb-xl">
+                    <label class="form-label"
+                        style="text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; font-weight: 800; color: #94a3b8; margin-bottom: 0.75rem;">İşlem
+                        Tarihi</label>
+                    <input type="date" name="date" id="transactionDate" class="form-input"
+                        style="padding: 1rem; border-radius: var(--radius-md);">
+                </div>
+
+                <div class="flex gap-md">
+                    <button type="button" class="nav-btn" onclick="closeTransactionModal()"
+                        style="flex: 1; height: 50px; font-weight: 700; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);">Vazgeç</button>
+                    <button type="button" class="nav-btn nav-btn-primary" onclick="saveTransaction()"
+                        style="flex: 1.5; height: 50px; font-weight: 800; border-radius: var(--radius-md); box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);">
+                        KAYDET
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/ai-chat.js"></script>
+    <script>
+        // --- MOBILE SIDEBAR LOGIC ---
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar-aura');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('active');
+
+            if (sidebar.classList.contains('active')) {
+                overlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            } else {
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close sidebar on menu item click (mobile)
+        document.querySelectorAll('.menu-item-aura').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // Auth check
+        if (!UserManager.isLoggedIn() || !checkRole('PATRON')) {
+            window.location.href = '/login.html';
+        }
+
+        // User info
+        const user = UserManager.get();
+        document.getElementById('userInfo').textContent = user.full_name;
+
+        // Menu navigation
+        document.querySelectorAll('.menu-item-aura[data-page]').forEach(item => {
+            item.addEventListener('click', function () {
+                showPage(this.dataset.page);
+            });
+        });
+
+        function showPage(pageId) {
+            // Update Menu
+            document.querySelectorAll('.menu-item-aura').forEach(m => {
+                if (m.dataset.page === pageId) m.classList.add('active');
+                else m.classList.remove('active');
+            });
+
+            // Update Content
+            document.querySelectorAll('.page-content').forEach(p => {
+                if (p.id === pageId + 'Page') p.classList.remove('hidden');
+                else p.classList.add('hidden');
+            });
+
+            // Load data
+            if (pageId === 'dashboard') loadDashboard();
+            else if (pageId === 'appointments') loadAppointments();
+            else if (pageId === 'analytics') loadAnalytics();
+            else if (pageId === 'staff') loadStaff();
+            else if (pageId === 'catalog') loadCatalog();
+            else if (pageId === 'stock') loadStock();
+            else if (pageId === 'showcase') loadShowcase();
+            else if (pageId === 'finance') loadFinance();
+            else if (pageId === 'settings') loadSettings();
+        }
+
+
+        // Load dashboard
+        let revenueChart = null;
+
+        async function loadDashboard() {
+            try {
+                // Cache-busting: Add timestamp to prevent browser caching
+                const timestamp = new Date().getTime();
+                const data = await apiCall(`/patron/analytics?t=${timestamp}`);
+                const statsData = await apiCall(`/patron/stats?t=${timestamp}`);
+
+                console.log('📊 DASHBOARD DATA RECEIVED:', data);
+
+                if (data.debug) {
+                    console.log('🔧 DEBUG INFO:', data.debug);
+                }
+
+                // Stats - 4 kart
+                statsGrid.innerHTML = `
+                    <div class="stat-card" style="border-left: 4px solid var(--aura-primary);">
+                        <div class="stat-label">
+                            <i class="fas fa-calendar-check" style="color: var(--aura-primary); margin-right: 8px;"></i> Bugünkü Randevu
+                        </div>
+                        <div class="stat-value">${data.stats.totalAppointments || 0}</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">Bugün için planlanan</div>
+                    </div>
+                    
+                    <div class="stat-card" id="unassignedAppointmentsCard" style="${statsData.unassignedAppointments > 0 ? 'border-left: 4px solid #f59e0b; background: rgba(245, 158, 11, 0.05);' : 'display:none;'}">
+                        <div class="stat-label">
+                            <i class="fas fa-user-clock" style="color: #f59e0b; margin-right: 8px;"></i> Bekleyen Atamalar
+                        </div>
+                        <div class="stat-value" style="color: #f59e0b;">${statsData.unassignedAppointments || 0}</div>
+                        <p style="font-size:0.7rem; color: #f59e0b; margin-top:0.5rem; font-weight: 600;">Personel ataması gerekiyor</p>
+                    </div>
+
+                    <div class="stat-card" style="border-left: 4px solid #10b981;">
+                        <div class="stat-label">
+                            <i class="fas fa-wallet" style="color: #10b981; margin-right: 8px;"></i> Toplam Gelir
+                        </div>
+                        <div class="stat-value" style="color: #10b981;">${formatCurrency(data.stats.totalRevenue)}</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">Son 30 Günlük</div>
+                    </div>
+
+                    <div class="stat-card" style="border-left: 4px solid #ef4444;">
+                        <div class="stat-label">
+                            <i class="fas fa-minus-circle" style="color: #ef4444; margin-right: 8px;"></i> Toplam Gider
+                        </div>
+                        <div class="stat-value" style="color: #ef4444;">${formatCurrency(data.stats.totalExpense)}</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">Son 30 Günlük</div>
+                    </div>
+
+                    <div class="stat-card" style="border-left: 4px solid #0ea5e9;">
+                        <div class="stat-label">
+                            <i class="fas fa-chart-line" style="color: #0ea5e9; margin-right: 8px;"></i> Net Kâr
+                        </div>
+                        <div class="stat-value" style="color: #0ea5e9;">${formatCurrency(data.stats.netProfit)}</div>
+                        <div style="font-size: 0.7rem; color: #94a3b8; margin-top: 4px;">Tahmini Net Kazanç</div>
+                    </div>
+                `;
+
+                // Render chart with REAL data
+                if (data.revenueData && data.revenueData.labels && data.revenueData.labels.length > 0) {
+                    renderRevenueChart(data.revenueData);
+                }
+
+                // Load other dashboard data
+                await loadDashboardWidgets();
+                await loadPendingStaff();
+                await loadPendingAppointments(); // New function
+
+                // Staff performance
+                const staffPerf = document.getElementById('staffPerformance');
+                if (!data.staffPerformance || data.staffPerformance.length === 0) {
+                    staffPerf.innerHTML = '<p class="text-muted" style="padding: var(--spacing-md);">Henüz veri yok</p>';
+                } else {
+                    staffPerf.innerHTML = `
+                        <table class="table-aura">
+                            <thead>
+                                <tr>
+                                    <th>Personel</th>
+                                    <th>Randevu</th>
+                                    <th>Ciro</th>
+                                    <th>Prim</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.staffPerformance.map(s => `
+                                    <tr>
+                                        <td style="padding: 1rem;"><strong>${s.full_name}</strong></td>
+                                        <td>${s.appointment_count || 0}</td>
+                                        <td><strong class="text-white">${formatCurrency(s.revenue || 0)}</strong></td>
+                                        <td><span class="aura-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">${formatCurrency(s.total_commission || 0)}</span></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                }
+            } catch (error) {
+                showToast('Veriler yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        function renderRevenueChart(revenueData) {
+            const ctx = document.getElementById('revenueChart');
+            if (!ctx || !revenueData) return;
+
+            if (revenueChart) {
+                revenueChart.destroy();
+            }
+
+            const labels = revenueData.labels || [];
+            const revenues = revenueData.values || [];
+
+            revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Günlük Gelir (₺)',
+                        data: revenues,
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#8b5cf6',
+                        pointBorderColor: '#fff',
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(0,0,0,0.8)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 },
+                            callbacks: {
+                                label: (context) => `Gelir: ${formatCurrency(context.parsed.y)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: (value) => '₺' + value.toLocaleString('tr-TR'),
+                                color: '#64748b',
+                                font: { size: 10 }
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.03)' }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#64748b',
+                                font: { size: 10 }
+                            },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function loadPendingAppointments() {
+            try {
+                const today = new Date().toLocaleDateString('sv-SE'); // YYYY-MM-DD yerel format
+                const data = await apiCall(`/patron/appointments?status=pending&date=${today}`);
+                const container = document.getElementById('pendingAppointments');
+
+                if (!container) return;
+
+                if (!data.appointments || data.appointments.length === 0) {
+                    container.innerHTML = `
+                        <div style="padding: 2rem; text-align: center; color: #64748b;">
+                            <i class="fas fa-calendar-check" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;"></i>
+                            <p>Bugün için bekleyen randevu bulunmuyor.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = data.appointments.map(apt => `
+                    <div class="appointment-item-aura">
+                        <div class="flex align-center gap-md">
+                            <div class="time-badge-aura">
+                                ${apt.appointment_time}
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; color: #fff; font-size: 1rem;">${apt.customer_name}</div>
+                                <div style="font-size: 0.8rem; color: #94a3b8; font-weight: 500;">
+                                    <i class="fas fa-magic" style="font-size: 0.7rem; color: var(--aura-primary); margin-right: 4px;"></i>
+                                    ${apt.service_name}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-sm">
+                            <div style="text-align: right; margin-right: 1rem;">
+                                <div style="font-weight: 800; color: #fff; font-size: 1.1rem;">${formatCurrency(apt.service_price)}</div>
+                                <div style="font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    ${apt.staff_name || 'PERSONEL BEKLİYOR'}
+                                </div>
+                            </div>
+                            <div class="flex gap-xs">
+                                <button class="btn-icon-aura success" onclick="completeAppointment(${apt.id})" title="Tamamla">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn-icon-aura robot" onclick="askAuraForAppointment(${apt.id}, '${apt.customer_name}', '${apt.service_name}')" title="Aura'ya Sor">
+                                    <i class="fas fa-robot"></i>
+                                </button>
+                                <button class="btn-icon-aura danger" onclick="cancelAppointment(${apt.id})" title="İptal">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Pending appointments error:', error);
+            }
+        }
+
+        function askAuraForAppointment(id, name, service) {
+            const message = `Müşterimiz ${name} için bugün ${service} randevusu var. Bu işlem için stoktaki hangi ürünleri kullanmalıyım ve ne gibi tavsiyelerde bulunabilirsin?`;
+
+            if (window.aiChat) {
+                // Eğer pencere kapalıysa aç
+                if (!window.aiChat.isOpen) window.aiChat.toggle();
+
+                // Mesajı gönder
+                setTimeout(() => {
+                    const chatInput = document.getElementById('ai-chat-input');
+                    const sendBtn = document.getElementById('ai-chat-send');
+                    if (chatInput && sendBtn) {
+                        chatInput.value = message;
+                        sendBtn.click();
+                    }
+                }, 400);
+            } else {
+                showToast("Aura hazır değil, lütfen sayfayı yenileyin.", "error");
+            }
+        }
+
+        // Modal visibility helpers
+        function openServiceModal() { document.getElementById('serviceModal').classList.remove('hidden'); }
+        function closeServiceModal() { document.getElementById('serviceModal').classList.add('hidden'); document.getElementById('serviceForm').reset(); }
+        function openStockModal() { document.getElementById('stockModal').classList.remove('hidden'); }
+        function closeStockModal() { document.getElementById('stockModal').classList.add('hidden'); document.getElementById('stockForm').reset(); }
+        function openAppointmentModal() { loadAppointmentModalData(); }
+        function closeAppointmentModal() { document.getElementById('appointmentModal').classList.add('hidden'); document.getElementById('appointmentForm').reset(); }
+
+        async function loadAppointmentModalData() {
+            try {
+                const [servicesData, staffData] = await Promise.all([
+                    apiCall('/patron/catalog'),
+                    apiCall('/patron/staff')
+                ]);
+
+                const serviceSelect = document.getElementById('aptServiceSelect');
+                const staffSelect = document.getElementById('aptStaffSelect');
+
+                serviceSelect.innerHTML = '<option value="">Hizmet Seçiniz</option>' +
+                    servicesData.services.filter(s => s.is_active).map(s =>
+                        `<option value="${s.id}">${s.name} (${formatCurrency(s.price)})</option>`
+                    ).join('');
+
+                staffSelect.innerHTML = '<option value="">Personel Seçiniz</option>' +
+                    staffData.staff.filter(s => s.is_active).map(s =>
+                        `<option value="${s.id}">${s.full_name}</option>`
+                    ).join('');
+
+                document.getElementById('appointmentModal').classList.remove('hidden');
+            } catch (error) {
+                showToast('Veriler yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+
+        // Staff Modal Functions
+        function showAddStaffModal() {
+            document.getElementById('staffModal').classList.remove('hidden');
+        }
+
+        function closeStaffModal() {
+            document.getElementById('staffModal').classList.add('hidden');
+            document.getElementById('staffForm').reset();
+        }
+
+        // Handle staff form submission
+        document.getElementById('staffForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                await apiCall('/patron/staff', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                showToast('Personel başarıyla eklendi', 'success');
+                closeStaffModal();
+                loadStaff();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // Mappings for older names if any
+        function showAddServiceModal() { openServiceModal(); }
+        function showAddStockModal() { openStockModal(); }
+        function showManualAppointmentModal() { openAppointmentModal(); }
+
+        document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                await apiCall('/patron/appointments/manual', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                showToast('Randevu başarıyla oluşturuldu', 'success');
+                closeAppointmentModal();
+                loadAppointments();
+
+                // Eğer dashboard sayfasındaysak widget'ları da yenile
+                if (document.getElementById('dashboardPage').classList.contains('active') ||
+                    !document.getElementById('dashboardPage').classList.contains('hidden')) {
+                    loadDashboard();
+                }
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // ===== SALON VİTRİNİ YÖNETİMİ =====
+        function showAddShowcaseModal() {
+            document.getElementById('showcaseModal').classList.remove('hidden');
+        }
+
+        function closeShowcaseModal() {
+            document.getElementById('showcaseModal').classList.add('hidden');
+            document.getElementById('showcaseForm').reset();
+        }
+
+        async function loadShowcase() {
+            try {
+                const data = await apiCall('/patron/showcase');
+                const grid = document.getElementById('showcaseGrid');
+
+                if (!data || !data.items || data.items.length === 0) {
+                    grid.innerHTML = '<div class="col-span-3 text-center p-lg"><p class="text-muted">Henüz vitrine bir şey eklemediniz.</p></div>';
+                    return;
+                }
+
+                grid.innerHTML = data.items.map(item => `
+                    <div class="aura-card p-0 overflow-hidden relative group">
+                        <img src="${item.image_url || 'https://via.placeholder.com/400x300?text=Aura+Showcase'}" 
+                             style="width: 100%; height: 200px; object-fit: cover;">
+                        <div style="padding: 1.25rem;">
+                            <div class="flex-between mb-xs">
+                                <span class="aura-badge" style="background: rgba(139, 92, 246, 0.1); color: var(--aura-primary); font-size: 0.7rem;">
+                                    ${item.type === 'campaign' ? 'KAMPANYA' : 'HİZMET ÖRNEĞİ'}
+                                </span>
+                                <label class="aura-badge" style="cursor: pointer; background: ${item.is_active ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)'}; color: ${item.is_active ? '#22c55e' : '#ef4444'};">
+                                    <input type="checkbox" class="hidden" ${item.is_active ? 'checked' : ''} 
+                                           onchange="toggleShowcaseStatus(${item.id}, this.checked)">
+                                    ${item.is_active ? 'AKTİF' : 'PASİF'}
+                                </label>
+                            </div>
+                            <h4 class="text-white mb-xs" style="font-size: 1rem;">${item.title}</h4>
+                            <p class="text-muted small mb-md" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.4rem;">
+                                ${item.description || ''}
+                            </p>
+                            <div class="flex gap-sm">
+                                <button class="nav-btn btn-sm" style="flex: 1; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.2);" 
+                                        onclick="deleteShowcaseItem(${item.id})">
+                                    <i class="fas fa-trash"></i> Sil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                showToast('Vitrin yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        async function toggleShowcaseStatus(id, isActive) {
+            try {
+                await apiCall(`/patron/showcase/${id}/toggle`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ is_active: isActive })
+                });
+                showToast('Durum güncellendi', 'success');
+                loadShowcase();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function deleteShowcaseItem(id) {
+            if (!confirm('Bu öğeyi vitrinden silmek istediğinize emin misiniz?')) return;
+            try {
+                await apiCall(`/patron/showcase/${id}`, { method: 'DELETE' });
+                showToast('Öğe silindi', 'success');
+                loadShowcase();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        document.getElementById('showcaseForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            try {
+                const response = await fetch('/api/patron/showcase', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') },
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Vitrin başarıyla güncellendi', 'success');
+                    closeShowcaseModal();
+                    loadShowcase();
+                } else {
+                    showToast(result.error || 'Yükleme başarısız', 'error');
+                }
+            } catch (error) {
+                showToast('Hata: ' + error.message, 'error');
+            }
+        });
+
+        // ===== STOK YÖNETİMİ =====
+
+
+        // Stock Modal Functions
+        function showAddStockModal() {
+            document.getElementById('stockModal').classList.remove('hidden');
+        }
+
+        function closeStockModal() {
+            document.getElementById('stockModal').classList.add('hidden');
+            document.getElementById('stockForm').reset();
+        }
+
+        // Handle stock form submission
+        document.getElementById('stockForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                await apiCall('/patron/stock', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                showToast('Stok başarıyla eklendi', 'success');
+                closeStockModal();
+                loadStock();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // Handle service form submission
+        document.getElementById('serviceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                await apiCall('/patron/catalog', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                showToast('Hizmet başarıyla eklendi', 'success');
+                closeServiceModal();
+                loadCatalog();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+
+        // Navigate to analytics page
+        function navigateToAnalytics() {
+            document.querySelector('.menu-item-aura[data-page="analytics"]').click();
+        }
+
+        // Analytics Tab Navigation
+        function switchAnalyticsTab(tabName) {
+            document.querySelectorAll('#analyticsPage .modal-tab').forEach(t => {
+                if (t.dataset.tab === tabName) t.classList.add('active');
+                else t.classList.remove('active');
+            });
+            document.querySelectorAll('#analyticsPage .tab-pane').forEach(c => {
+                if (c.id === tabName + 'Tab') c.classList.add('active');
+                else c.classList.remove('active');
+            });
+        }
+
+        document.querySelectorAll('.analytics-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                switchAnalyticsTab(this.dataset.tab);
+            });
+        });
+
+        // Date range filter
+        let currentDateRange = 30;
+        document.getElementById('dateRangeFilter')?.addEventListener('change', function () {
+            currentDateRange = parseInt(this.value);
+            loadAnalytics();
+        });
+
+        // Status filter
+        document.getElementById('statusFilter')?.addEventListener('change', function () {
+            loadAppointmentHistory();
+        });
+
+        // Analytics variables
+        let servicesBarChart = null;
+        let servicesPieChart = null;
+        let currentPage = 1;
+
+        // Load Analytics Page
+        async function loadAnalytics() {
+            await loadTopCustomers();
+            await loadPopularServices();
+            await loadAppointmentHistory();
+        }
+
+        // Load dashboard widgets
+        async function loadDashboardWidgets() {
+            try {
+                // Top customers widget
+                const customersData = await apiCall('/patron/analytics/top-customers?days=30&limit=3');
+                const topCustomersWidget = document.getElementById('topCustomersWidget');
+
+                if (customersData.data && customersData.data.length > 0) {
+                    if (topCustomersWidget) {
+                        topCustomersWidget.innerHTML = customersData.data.map((customer, index) => `
+                        <div class="aura-card" style="background: rgba(255,255,255,0.02); margin-bottom: 0.75rem; padding: 1rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03);">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--aura-primary); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; color: #fff;">${index + 1}</div>
+                                <div>
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">${customer.customer_name}</div>
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">${customer.customer_phone}</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div class="aura-badge" style="background: rgba(99, 102, 241, 0.1); color: var(--aura-primary); margin-bottom: 0.25rem;">${customer.visit_count} ZİYARET</div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.85rem;">${formatCurrency(customer.total_spent)}</div>
+                            </div>
+                        </div>
+                        `).join('');
+                    }
+                } else {
+                    if (topCustomersWidget) topCustomersWidget.innerHTML = '<p class="text-muted">Henüz veri yok</p>';
+                }
+
+                // Popular services widget
+                const servicesData = await apiCall('/patron/analytics/popular-services?days=30');
+                const popularServicesWidget = document.getElementById('popularServicesWidget');
+
+                if (servicesData.data && servicesData.data.length > 0) {
+                    if (popularServicesWidget) {
+                        const topServices = servicesData.data.slice(0, 3);
+                        popularServicesWidget.innerHTML = topServices.map((service, index) => `
+                        <div class="aura-card" style="background: rgba(255,255,255,0.02); margin-bottom: 0.75rem; padding: 1rem; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03);">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--aura-accent); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; color: #fff;">${index + 1}</div>
+                                <div>
+                                    <div style="font-weight: 700; color: #fff; font-size: 0.9rem;">${service.name}</div>
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">${service.category || 'Genel'}</div>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div class="aura-badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; margin-bottom: 0.25rem;">${service.booking_count} RANDEVU</div>
+                                <div style="font-weight: 700; color: #fff; font-size: 0.85rem;">${service.percentage}% Pay</div>
+                            </div>
+                        </div>
+                        `).join('');
+                    }
+                } else {
+                    if (popularServicesWidget) popularServicesWidget.innerHTML = '<p class="text-muted">Henüz veri yok</p>';
+                }
+            } catch (error) {
+                console.error('Widget loading error:', error);
+            }
+        }
+
+
+        // Load top customers
+        async function loadTopCustomers() {
+            try {
+                const data = await apiCall(`/patron/analytics/top-customers?days=${currentDateRange}&limit=10`);
+                const container = document.getElementById('topCustomersTable');
+                if (!container) return;
+
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = '<p class="text-muted">Henüz veri yok</p>';
+                    return;
+                }
+
+                container.innerHTML = `
+                <table class="table-aura">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Müşteri</th>
+                                <th>Telefon</th>
+                                <th>Ziyaret</th>
+                                <th>Toplam Harcama</th>
+                                <th>Son Ziyaret</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.data.map((customer, index) => `
+                                <tr>
+                                    <td><strong>${index + 1}</strong></td>
+                                    <td><strong>${customer.customer_name}</strong></td>
+                                    <td>${customer.customer_phone}</td>
+                                    <td><span class="text-primary" style="font-weight: 600;">${customer.visit_count}</span></td>
+                                    <td><strong class="text-white">${formatCurrency(customer.total_spent)}</strong></td>
+                                    <td>${formatDate(customer.last_visit)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                        `;
+            } catch (error) {
+                showToast('Müşteri verileri yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        // Load popular services
+        async function loadPopularServices() {
+            try {
+                const data = await apiCall(`/patron/analytics/popular-services?days=${currentDateRange}`);
+
+                if (!data.data || data.data.length === 0) {
+                    document.getElementById('popularServicesTable').innerHTML = '<p class="text-muted">Henüz veri yok</p>';
+                    return;
+                }
+
+                // Render charts
+                renderServicesCharts(data.data);
+
+                // Render table
+                document.getElementById('popularServicesTable').innerHTML = `
+                <table class="table-aura">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Hizmet</th>
+                                <th>Kategori</th>
+                                <th>Rezervasyon</th>
+                                <th>Oran</th>
+                                <th>Toplam Gelir</th>
+                                <th>Ort. Fiyat</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.data.map((service, index) => `
+                                <tr>
+                                    <td><strong>${index + 1}</strong></td>
+                                    <td><strong>${service.name}</strong></td>
+                                    <td>${service.category || '-'}</td>
+                                    <td><span class="text-primary" style="font-weight: 600;">${service.booking_count}</span></td>
+                                    <td><span class="text-success">${service.percentage}%</span></td>
+                                    <td><strong class="text-white">${formatCurrency(service.total_revenue)}</strong></td>
+                                    <td>${formatCurrency(service.avg_price)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                        `;
+            } catch (error) {
+                showToast('Hizmet verileri yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        // Render services charts
+        function renderServicesCharts(services) {
+            // Bar Chart
+            const barCtx = document.getElementById('servicesBarChart');
+            if (barCtx) {
+                if (servicesBarChart) servicesBarChart.destroy();
+
+                const topServices = services.slice(0, 10);
+                servicesBarChart = new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: topServices.map(s => s.name),
+                        datasets: [{
+                            label: 'Rezervasyon Sayısı',
+                            data: topServices.map(s => s.booking_count),
+                            backgroundColor: 'rgba(139, 92, 246, 0.6)',
+                            borderColor: '#8b5cf6',
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { color: '#9ca3af' },
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                            },
+                            x: {
+                                ticks: { color: '#9ca3af' },
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Pie Chart
+            const pieCtx = document.getElementById('servicesPieChart');
+            if (pieCtx) {
+                if (servicesPieChart) servicesPieChart.destroy();
+
+                const topServices = services.slice(0, 5);
+                const colors = ['#8b5cf6', '#ec4899', '#fbbf24', '#10b981', '#6366f1'];
+
+                servicesPieChart = new Chart(pieCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: topServices.map(s => s.name),
+                        datasets: [{
+                            data: topServices.map(s => s.booking_count),
+                            backgroundColor: colors,
+                            borderColor: '#1f2937',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: { color: '#9ca3af', padding: 15 }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Load appointment history
+        async function loadAppointmentHistory(page = 1) {
+            try {
+                const status = document.getElementById('statusFilter')?.value || '';
+                const startDate = new Date();
+                startDate.setDate(startDate.getDate() - currentDateRange);
+
+                const params = new URLSearchParams({
+                    page,
+                    limit: 20,
+                    startDate: startDate.toISOString().split('T')[0]
+                });
+
+                if (status) params.append('status', status);
+
+                const data = await apiCall(`/patron/analytics/appointments?${params}`);
+                const container = document.getElementById('appointmentsHistoryTable');
+                const paginationContainer = document.getElementById('paginationControls');
+
+                if (!container) return;
+
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = '<p class="text-muted" style="text-align: center; padding: 2rem;">Randevu bulunamadı</p>';
+                    if (paginationContainer) paginationContainer.innerHTML = '';
+                    return;
+                }
+
+                container.innerHTML = `
+                <table class="table-aura">
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Saat</th>
+                                <th>Müşteri</th>
+                                <th>Hizmet</th>
+                                <th>Personel</th>
+                                <th>Fiyat</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.data.map(apt => `
+                                <tr>
+                                    <td>${formatDate(apt.appointment_date)}</td>
+                                    <td><strong>${apt.appointment_time}</strong></td>
+                                    <td>
+                                        <strong>${apt.customer_name}</strong><br/>
+                                        <span style="font-size: 0.75rem; color: #94a3b8;">${apt.customer_phone}</span>
+                                    </td>
+                                    <td>${apt.service_name}</td>
+                                    <td>${apt.staff_name}</td>
+                                    <td><strong class="text-white">${formatCurrency(apt.service_price)}</strong></td>
+                                    <td>
+                                        <span class="aura-badge aura-badge-${apt.status === 'completed' ? 'success' : apt.status === 'cancelled' ? 'danger' : 'warning'}">
+                                            ${apt.status === 'completed' ? 'Tamamlandı' : apt.status === 'cancelled' ? 'İptal' : 'Bekliyor'}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    `;
+
+                // Pagination
+                if (data.pagination && data.pagination.totalPages > 1) {
+                    const pagination = data.pagination;
+                    let paginationHTML = '<div style="display: flex; gap: 0.5rem; justify-content: center;">';
+
+                    if (pagination.page > 1) {
+                        paginationHTML += `<button class="btn btn-secondary btn-sm" onclick="loadAppointmentHistory(${pagination.page - 1})">← Önceki</button>`;
+                    }
+
+                    paginationHTML += `<span style="padding: 0.5rem 1rem;">Sayfa ${pagination.page} / ${pagination.totalPages}</span>`;
+
+                    if (pagination.page < pagination.totalPages) {
+                        paginationHTML += `<button class="btn btn-secondary btn-sm" onclick="loadAppointmentHistory(${pagination.page + 1})">Sonraki →</button>`;
+                    }
+
+                    paginationHTML += '</div>';
+                    if (paginationContainer) paginationContainer.innerHTML = paginationHTML;
+                } else {
+                    if (paginationContainer) paginationContainer.innerHTML = '';
+                }
+
+                currentPage = page;
+            } catch (error) {
+                showToast('Randevu geçmişi yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        // Load pending staff approvals
+        async function loadPendingStaff() {
+            try {
+                const data = await apiCall('/patron/pending-staff');
+
+                const card = document.getElementById('pendingStaffCard');
+                if (!card) return;
+
+                if (!data.pendingStaff || data.pendingStaff.length === 0) {
+                    card.style.display = 'none';
+                    return;
+                }
+
+                card.style.display = 'block';
+                const container = document.getElementById('pendingStaffList');
+
+                container.innerHTML = data.pendingStaff.map(staff => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-sm) var(--spacing-md); background: var(--bg-tertiary); border-radius: var(--radius-sm); margin-bottom: var(--spacing-sm);">
+                        <div>
+                            <strong style="font-size: 0.9rem;">${staff.full_name}</strong>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">
+                                ${staff.username} • ${staff.phone || 'Telefon yok'} • ${formatDateTime(staff.created_at)}
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn-icon active" onclick="approveStaff(${staff.id})" title="Onayla">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn-icon active-danger" onclick="rejectStaff(${staff.id})" title="Reddet">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    `).join('');
+            } catch (error) {
+                console.error('Bekleyen personel yükleme hatası:', error);
+            }
+        }
+
+        // Approve staff
+        async function approveStaff(staffId) {
+            if (!confirmAction('Bu personeli onaylamak istediğinizden emin misiniz?')) return;
+
+            try {
+                await apiCall(`/patron/staff/${staffId}/approve`, { method: 'POST' });
+                showToast('Personel onaylandı', 'success');
+                loadPendingStaff();
+                loadStaff(); // Refresh staff list
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Reject staff
+        async function rejectStaff(staffId) {
+            if (!confirmAction('Bu personeli reddetmek istediğinizden emin misiniz? Bu işlem geri alınamaz.')) return;
+
+            try {
+                await apiCall(`/patron/staff/${staffId}/reject`, { method: 'POST' });
+                showToast('Personel reddedildi', 'success');
+                loadPendingStaff();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // ===== RANDEVU YÖNETİMİ =====
+        async function loadAppointments() {
+            try {
+                const status = document.getElementById('filterStatus').value;
+                const staff_id = document.getElementById('filterStaff').value;
+                const date_from = document.getElementById('filterDateFrom').value;
+                const date_to = document.getElementById('filterDateTo').value;
+
+                const params = new URLSearchParams();
+                if (status) params.append('status', status);
+                if (staff_id) params.append('staff_id', staff_id);
+                if (date_from) params.append('date_from', date_from);
+                if (date_to) params.append('date_to', date_to);
+
+                const data = await apiCall(`/patron/appointments?${params.toString()}`);
+
+                const tbody = document.querySelector('#appointmentsTable tbody');
+
+                if (data.appointments.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: var(--spacing-lg); color: var(--text-muted);">Randevu bulunamadı</td></tr>';
+                    return;
+                }
+
+                // Global staff list for assignment dropdowns
+                const staffData = await apiCall('/patron/staff');
+                const salonStaff = staffData.staff || [];
+
+                tbody.innerHTML = data.appointments.map(apt => {
+                    const statusBadge = {
+                        'pending': '<span class="badge badge-warning">Bekliyor</span>',
+                        'completed': '<span class="badge badge-success">Tamamlandı</span>',
+                        'cancelled': '<span class="badge badge-danger">İptal</span>',
+                        'no_show': '<span class="badge badge-secondary">Gelmedi</span>'
+                    }[apt.status] || apt.status;
+
+                    const actions = apt.status === 'pending'
+                        ? `<div class="flex gap-xs">
+                             <button class="btn-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.1);" onclick="completeAppointment(${apt.id})" title="Tamamla">
+                                <i class="fas fa-check"></i>
+                             </button>
+                             <button class="btn-icon" style="background: rgba(139, 92, 246, 0.1); color: var(--aura-primary); border: 1px solid rgba(139, 92, 246, 0.1);" onclick="askAuraForAppointment(${apt.id}, '${apt.customer_name}', '${apt.service_name}')" title="Aura'ya Sor">
+                                <i class="fas fa-robot"></i>
+                             </button>
+                             <button class="btn-icon" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.1);" onclick="cancelAppointment(${apt.id})" title="İptal">
+                                 <i class="fas fa-times"></i>
+                             </button>
+                           </div>`
+                        : '-';
+
+                    // Personnel Assignment logic
+                    let staffDisplay = '';
+                    if (apt.staff_id) {
+                        staffDisplay = `<div style="display:flex; align-items:center; gap:8px;">
+                            <div style="width:24px; height:24px; border-radius:50%; background:var(--aura-primary); display:flex; align-items:center; justify-content:center; font-size:10px; color:white;">${apt.staff_name.charAt(0)}</div>
+                            <span>${apt.staff_name}</span>
+                        </div>`;
+                    } else {
+                        staffDisplay = `
+                            <div class="assign-wrapper" style="position:relative;">
+                                <select class="form-input btn-sm" style="padding: 0.3rem 0.5rem; font-size: 0.75rem; border-color: var(--aura-primary);" onchange="assignAppointment(${apt.id}, this.value)">
+                                    <option value="">⚠️ Personel Ata</option>
+                                    ${salonStaff.map(s => `<option value="${s.id}">${s.full_name}</option>`).join('')}
+                                </select>
+                            </div>
+                        `;
+                    }
+
+                    return `
+                    <tr>
+                            <td>${formatDate(apt.appointment_date)} ${apt.appointment_time}</td>
+                            <td>
+                                <strong>${apt.customer_name}</strong><br>
+                                <small style="color: var(--text-muted);">${apt.customer_phone}</small>
+                            </td>
+                            <td>${apt.service_name}</td>
+                            <td>${staffDisplay}</td>
+                            <td>${formatCurrency(apt.service_price)}</td>
+                            <td>${statusBadge}</td>
+                            <td style="white-space: nowrap;">${actions}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Load staff for filter
+                if (document.getElementById('filterStaff').options.length <= 1) {
+                    const filterStaff = document.getElementById('filterStaff');
+                    salonStaff.forEach(staff => {
+                        const option = document.createElement('option');
+                        option.value = staff.id;
+                        option.textContent = staff.full_name;
+                        filterStaff.appendChild(option);
+                    });
+                }
+
+            } catch (error) {
+                console.error('Randevu yükleme hatası:', error);
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function completeAppointment(appointmentId) {
+            if (!confirmAction('Bu randevuyu tamamlamak istediğinizden emin misiniz?\n\nOtomatik olarak:\n- Finans kaydı oluşturulacak\n- Stoktan malzeme düşülecek\n- Komisyon hesaplanacak')) {
+                return;
+            }
+
+            try {
+                const data = await apiCall(`/patron/appointments/${appointmentId}/complete`, {
+                    method: 'POST'
+                });
+
+                showToast(`Randevu tamamlandı!\n\nGelir: ${formatCurrency(data.finance.revenue)
+                    } \nMalzeme: ${formatCurrency(data.finance.materialCost)} \nKomisyon: ${formatCurrency(data.finance.commission)} `, 'success');
+                loadAppointments();
+
+                // Dashboard verilerini yenile
+                if (typeof loadDashboard === 'function') {
+                    loadDashboard();
+                }
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function cancelAppointment(appointmentId) {
+            if (!confirmAction('Bu randevuyu iptal etmek istediğinize emin misiniz?')) return;
+
+            try {
+                await apiCall(`/patron/appointments/${appointmentId}`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ status: 'cancelled' })
+                });
+
+                showToast('Randevu iptal edildi', 'success');
+                loadAppointments();
+
+                // Dashboard verilerini yenile
+                if (typeof loadDashboard === 'function') {
+                    loadDashboard();
+                }
+                updateAssignmentStats(); // Refresh stats after cancellation
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function assignAppointment(appointmentId, staffId) {
+            if (!staffId) return;
+
+            try {
+                await apiCall(`/patron/appointments/${appointmentId}/assign`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ staff_id: staffId })
+                });
+                showToast('Personel başarıyla atandı', 'success');
+                loadAppointments();
+
+                // Dashboard verilerini yenile
+                if (typeof loadDashboard === 'function') {
+                    loadDashboard();
+                }
+                updateAssignmentStats(); // Refresh stats after assignment
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function updateAssignmentStats() {
+            try {
+                const data = await apiCall('/patron/stats');
+                // Dashboard stats update (if elements exist)
+                const unassignedCard = document.getElementById('unassignedAppointmentsCard');
+                if (unassignedCard) {
+                    if (data.unassignedAppointments > 0) {
+                        unassignedCard.style.display = 'block';
+                        document.getElementById('unassignedCount').innerText = data.unassignedAppointments;
+                    } else {
+                        unassignedCard.style.display = 'none';
+                    }
+                }
+            } catch (e) { }
+        }
+
+        // ===== PERSONEL YÖNETİMİ =====
+        async function loadStaff() {
+            try {
+                const data = await apiCall('/patron/staff');
+                const tbody = document.querySelector('#staffTable tbody');
+
+                if (!data.staff || data.staff.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 3rem; color: #94a3b8;">Henüz personel yok</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.staff.map(staff => {
+                    const statusBadge = staff.is_active
+                        ? '<span class="aura-badge aura-badge-success"><i class="fas fa-check-circle" style="margin-right: 0.4rem;"></i> Aktif</span>'
+                        : '<span class="aura-badge aura-badge-danger"><i class="fas fa-times-circle" style="margin-right: 0.4rem;"></i> Pasif</span>';
+
+                    const commissionRate = (staff.commission_rate * 100).toFixed(0);
+
+                    return `
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--aura-primary), var(--aura-secondary)); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 0.85rem;">${staff.full_name.charAt(0).toUpperCase()}</div>
+                                    <div>
+                                        <div style="font-weight: 700; color: #fff;">${staff.full_name}</div>
+                                        <div style="font-size: 0.75rem; color: #94a3b8;">@${staff.username}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-size: 0.85rem; color: #e2e8f0;">${staff.phone || '-'}</div>
+                                <div style="font-size: 0.75rem; color: #64748b;">${staff.email || '-'}</div>
+                            </td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="font-weight: 700; color: var(--aura-accent);">%${commissionRate}</span>
+                                    <button class="nav-btn btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.65rem;" onclick="editCommission(${staff.id}, ${staff.commission_rate})">Değiştir</button>
+                                </div>
+                            </td>
+                            <td>${statusBadge}</td>
+                            <td>
+                                <div class="action-group">
+                                    <button class="nav-btn btn-sm ${staff.is_active ? '' : 'nav-btn-primary'}" onclick="toggleStaffStatus(${staff.id}, ${!staff.is_active})" title="${staff.is_active ? 'Pasifleştir' : 'Aktifleştir'}">
+                                        <i class="fas fa-${staff.is_active ? 'user-slash' : 'user-check'}"></i>
+                                    </button>
+                                    <button class="nav-btn btn-sm" onclick="showStaffDetails(${staff.id})" title="Detaylar & Ayarlar">
+                                        <i class="fas fa-sliders-h"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                `;
+                }).join('');
+            } catch (error) {
+                showToast('Personel yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        let currentStaffId = null;
+
+        async function showStaffDetails(staffId) {
+            currentStaffId = staffId;
+            try {
+                const data = await apiCall(`/patron/staff/${staffId}/details`);
+
+                document.getElementById('staffDetailName').innerText = `${data.staff.full_name} - Detaylar`;
+
+                // Commissions Table
+                const commsBody = document.querySelector('#staffCommissionsTable tbody');
+                if (!data.commissions || data.commissions.length === 0) {
+                    commsBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b;">Hizmet bulunamadı</td></tr>';
+                } else {
+                    commsBody.innerHTML = data.commissions.map(c => `
+                        <tr>
+                            <td><strong style="color: #fff;">${c.service_name}</strong></td>
+                            <td><span class="aura-badge" style="background: rgba(139, 92, 246, 0.1); color: var(--aura-primary);">${c.category}</span></td>
+                            <td>${formatCurrency(c.service_price)}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.5rem; max-width: 100px;">
+                                    <input type="number" class="form-input comm-input" 
+                                           style="padding: 0.4rem 0.75rem; font-size: 0.85rem;"
+                                           data-service-id="${c.service_id}" 
+                                           value="${c.custom_rate > 0 ? (c.custom_rate * 100).toFixed(0) : ''}" 
+                                           placeholder="15">
+                                    <span style="color: #94a3b8; font-weight: 700;">%</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+
+                // Hours Table
+                const days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+                const hoursBody = document.querySelector('#staffHoursTable tbody');
+                hoursBody.innerHTML = [0, 1, 2, 3, 4, 5, 6].map(day => {
+                    const h = data.hours.find(x => x.day_of_week === day) || { start_time: '09:00', end_time: '19:00', is_off: 0 };
+                    return `
+                        <tr>
+                            <td><strong style="color: #fff;">${days[day]}</strong></td>
+                            <td><input type="time" class="form-input start-input" style="padding: 0.4rem 0.75rem;" value="${h.start_time || '09:00'}"></td>
+                            <td><input type="time" class="form-input end-input" style="padding: 0.4rem 0.75rem;" value="${h.end_time || '19:00'}"></td>
+                            <td>
+                                <label class="aura-badge" style="cursor: pointer; background: ${h.is_off ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255, 255, 255, 0.05)'}; color: ${h.is_off ? '#ef4444' : '#94a3b8'};">
+                                    <input type="checkbox" class="off-input hidden" ${h.is_off ? 'checked' : ''} onchange="this.parentElement.style.background = this.checked ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255, 255, 255, 0.05)'; this.parentElement.style.color = this.checked ? '#ef4444' : '#94a3b8';">
+                                    <span>${h.is_off ? 'İZİNLİ' : 'ÇALIŞIYOR'}</span>
+                                </label>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Advances Table
+                const advBody = document.querySelector('#staffAdvancesTable tbody');
+                if (!data.advances || data.advances.length === 0) {
+                    advBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #64748b;">Kayıt bulunamadı</td></tr>';
+                } else {
+                    advBody.innerHTML = data.advances.map(a => `
+                        <tr>
+                            <td style="font-size: 0.85rem; color: #94a3b8;">${formatDateTime(a.date)}</td>
+                            <td><strong style="color: #ef4444;">${formatCurrency(a.amount)}</strong></td>
+                            <td>${a.description || '-'}</td>
+                        </tr>
+                    `).join('');
+                }
+
+                document.getElementById('staffDetailsModal').classList.remove('hidden');
+                switchStaffTab('commissions');
+            } catch (error) {
+                showToast('Detaylar yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        function switchStaffTab(tab) {
+            // Update tabs
+            document.querySelectorAll('#staffDetailsModal .modal-tab').forEach(t => {
+                if (t.dataset.tab === tab) t.classList.add('active');
+                else t.classList.remove('active');
+            });
+
+            // Update panes
+            document.querySelectorAll('#staffDetailsModal .tab-pane').forEach(p => {
+                if (p.id === 'tab-' + tab) p.classList.add('active');
+                else p.classList.remove('active');
+            });
+        }
+
+        function closeStaffDetailsModal() {
+            document.getElementById('staffDetailsModal').classList.add('hidden');
+        }
+
+        async function saveStaffCommissions() {
+            const inputs = document.querySelectorAll('.comm-input');
+            const commissions = Array.from(inputs)
+                .filter(i => i.value !== '')
+                .map(i => ({
+                    service_id: parseInt(i.dataset.serviceId),
+                    rate: parseFloat(i.value) / 100
+                }));
+
+            try {
+                await apiCall(`/patron/staff/${currentStaffId}/commissions`, {
+                    method: 'POST',
+                    body: JSON.stringify({ commissions })
+                });
+                showToast('Özel pirim oranları kaydedildi', 'success');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function saveStaffHours() {
+            try {
+                if (!currentStaffId) {
+                    alert('Hata: Personel ID bulunamadı! Lütfen sayfayı yenileyip tekrar deneyin.');
+                    return;
+                }
+
+                const rows = document.querySelectorAll('#staffHoursTable tbody tr');
+                console.log(`[DEBUG] Found ${rows.length} rows for staff hours.`);
+
+                if (rows.length === 0) {
+                    alert('Hata: Tablo satırları bulunamadı!');
+                    return;
+                }
+
+                const hours = Array.from(rows).map((row, index) => ({
+                    day: index,
+                    start: row.querySelector('.start-input').value,
+                    end: row.querySelector('.end-input').value,
+                    is_off: row.querySelector('.off-input').checked
+                }));
+
+                console.log('[DEBUG] Sending payload:', JSON.stringify(hours));
+
+                const response = await apiCall(`/patron/staff/${currentStaffId}/hours`, {
+                    method: 'POST',
+                    body: JSON.stringify({ hours })
+                });
+
+                console.log('[DEBUG] Server response:', response);
+                showToast('Çalışma saatleri başarıyla kaydedildi ✅', 'success');
+
+            } catch (error) {
+                console.error('[DEBUG] Save Error:', error);
+                alert('Kayıt başarısız: ' + error.message);
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function addStaffAdvance() {
+            const amount = parseFloat(document.getElementById('advanceAmount').value);
+            const description = document.getElementById('advanceDesc').value;
+
+            if (!amount || amount <= 0) {
+                showToast('Geçersiz miktar', 'error');
+                return;
+            }
+
+            try {
+                await apiCall(`/patron/staff/${currentStaffId}/advances`, {
+                    method: 'POST',
+                    body: JSON.stringify({ amount, description })
+                });
+                showToast('Ödeme/Avans kaydedildi', 'success');
+                document.getElementById('advanceAmount').value = '';
+                document.getElementById('advanceDesc').value = '';
+                showStaffDetails(currentStaffId); // Refresh tab
+                loadDashboard(); // Refresh dashboard stats
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function toggleStaffStatus(staffId, isActive) {
+            try {
+                console.log('Toggle staff status:', { staffId, isActive });
+                const response = await apiCall(`/patron/staff/${staffId}/toggle`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ is_active: isActive })
+                });
+                console.log('Toggle response:', response);
+                showToast(isActive ? 'Personel aktifleştirildi' : 'Personel pasifleştirildi', 'success');
+                loadStaff();
+            } catch (error) {
+                console.error('Toggle error:', error);
+                showToast(error.message || 'Sunucu hatası', 'error');
+                loadStaff(); // Revert UI
+            }
+        }
+
+        async function editCommission(staffId, currentRate) {
+            const newRate = prompt(`Yeni pirim oranını girin (0-100):`, (currentRate * 100).toFixed(0));
+            if (newRate === null) return;
+
+            const rate = parseFloat(newRate) / 100;
+            if (isNaN(rate) || rate < 0 || rate > 1) {
+                showToast('Geçersiz oran! 0-100 arasında bir değer girin.', 'error');
+                return;
+            }
+
+            try {
+                await apiCall(`/patron/staff/${staffId}`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ commission_rate: rate })
+                });
+                showToast(`Pirim oranı %${(rate * 100).toFixed(0)} olarak güncellendi`, 'success');
+                loadStaff();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function deleteStaff(staffId) {
+            if (!confirm('Bu personeli silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.')) return;
+
+            try {
+                await apiCall(`/patron/staff/${staffId}`, {
+                    method: 'DELETE'
+                });
+                showToast('Personel silindi', 'success');
+                loadStaff();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // ===== KATALOG YÖNETİMİ =====
+        async function loadCatalog() {
+            try {
+                const data = await apiCall('/patron/catalog');
+                const tbody = document.querySelector('#catalogTable tbody');
+
+                if (!data.services || data.services.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem; color: #94a3b8;">Henüz hizmet yok</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.services.map(service => {
+                    const statusBadge = service.is_active
+                        ? '<span class="aura-badge aura-badge-success">Aktif</span>'
+                        : '<span class="aura-badge aura-badge-danger">Pasif</span>';
+
+                    return `
+                        <tr>
+                            <td><strong style="color: #fff;">${service.name}</strong></td>
+                            <td><span class="aura-badge" style="background: rgba(139, 92, 246, 0.1); color: var(--aura-primary);">${service.category || 'Genel'}</span></td>
+                            <td><strong style="color: var(--aura-accent);">${formatCurrency(service.price)}</strong></td>
+                            <td>${service.duration} dk</td>
+                            <td>${statusBadge}</td>
+                            <td>
+                                <div class="action-group">
+                                    <button class="nav-btn btn-sm" title="Reçete Yönetimi" onclick="showRecipeModal(${service.id}, '${service.name.replace(/'/g, "\\'")}')">
+                                        <i class="fas fa-mortar-pestle"></i> Reçete
+                                    </button>
+                                    <button class="nav-btn btn-sm ${service.is_active ? '' : 'nav-btn-primary'}" onclick="toggleServiceStatus(${service.id}, ${!service.is_active})">
+                                        <i class="fas fa-${service.is_active ? 'eye-slash' : 'eye'}"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                showToast('Katalog yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        async function toggleServiceStatus(serviceId, isActive) {
+            try {
+                await apiCall(`/patron/catalog/${serviceId}`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ is_active: isActive })
+                });
+                showToast(isActive ? 'Hizmet aktifleştirildi' : 'Hizmet pasifleştirildi', 'success');
+                loadCatalog();
+            } catch (error) {
+                showToast(error.message, 'error');
+                loadCatalog();
+            }
+        }
+
+        async function deleteService(serviceId) {
+            if (!confirm('Bu hizmeti silmek istediğinizden emin misiniz?')) return;
+
+            try {
+                await apiCall(`/patron/catalog/${serviceId}`, {
+                    method: 'DELETE'
+                });
+                showToast('Hizmet silindi', 'success');
+                loadCatalog();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // ===== STOK YÖNETİMİ =====
+        let stockData = []; // Global stock data for count modals
+
+        async function loadStock() {
+            try {
+                const data = await apiCall('/patron/stock');
+                const tbody = document.querySelector('#stockTable tbody');
+
+                if (!data.stock || data.stock.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 3rem; color: #94a3b8;">Henüz stok yok</td></tr>';
+                    return;
+                }
+
+                stockData = data.stock; // Store for modals
+
+                tbody.innerHTML = data.stock.map(item => {
+                    const isLow = item.quantity < 50;
+                    const stockColor = isLow ? '#ef4444' : '#10b981';
+
+                    // Last count info
+                    const lastCount = item.last_count_date ? formatDateTime(item.last_count_date) : '-';
+                    const discrepancy = item.last_discrepancy !== null && item.last_discrepancy !== undefined
+                        ? `<span style="color: ${item.last_discrepancy < 0 ? '#ef4444' : item.last_discrepancy > 0 ? '#10b981' : '#94a3b8'}; font-weight: 700;">${item.last_discrepancy > 0 ? '+' : ''}${item.last_discrepancy}</span>`
+                        : '-';
+
+                    return `
+                        <tr>
+                            <td><strong style="color: #fff;">${item.item_name}</strong></td>
+                            <td><span class="aura-badge" style="background: rgba(251, 191, 36, 0.1); color: var(--aura-accent);">${item.item_type}</span></td>
+                            <td><strong style="color: ${stockColor};">${item.quantity}</strong> <small style="color: #94a3b8;">${item.unit}</small></td>
+                            <td>${formatCurrency(item.unit_cost)}</td>
+                            <td><div style="font-size: 0.75rem; color: #94a3b8;">${lastCount}</div></td>
+                            <td>${discrepancy}</td>
+                            <td>
+                                <button class="nav-btn btn-sm" onclick="showCountModal(${item.id})" title="Stok Sayımı Yap">
+                                    <i class="fas fa-clipboard-check"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                showToast('Stok yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        // ===== STOCK COUNT FUNCTIONS =====
+        let currentCountStockId = null;
+
+        function showCountModal(stockId) {
+            const stock = stockData.find(s => s.id === stockId);
+            if (!stock) return;
+
+            currentCountStockId = stockId;
+            document.getElementById('countItemName').value = stock.item_name;
+            document.getElementById('countSystemQty').value = `${stock.quantity} ${stock.unit}`;
+            document.getElementById('countPhysicalQty').value = '';
+            document.getElementById('countDiscrepancy').value = '';
+            document.getElementById('countNotes').value = '';
+            document.getElementById('countModal').classList.remove('hidden');
+
+            // Auto-calculate discrepancy on input
+            document.getElementById('countPhysicalQty').oninput = function () {
+                const physical = parseFloat(this.value) || 0;
+                const system = stock.quantity;
+                const diff = physical - system;
+                document.getElementById('countDiscrepancy').value = `${diff > 0 ? '+' : ''}${diff.toFixed(1)} ${stock.unit}`;
+                document.getElementById('countDiscrepancy').style.color = diff < 0 ? '#ef4444' : diff > 0 ? '#10b981' : '#94a3b8';
+            };
+        }
+
+        function closeCountModal() {
+            document.getElementById('countModal').classList.add('hidden');
+            currentCountStockId = null;
+        }
+
+        async function saveStockCount() {
+            const physical = parseFloat(document.getElementById('countPhysicalQty').value);
+            const notes = document.getElementById('countNotes').value;
+
+            if (isNaN(physical) || physical < 0) {
+                showToast('Geçerli bir miktar girin', 'error');
+                return;
+            }
+
+            try {
+                await apiCall(`/patron/stock/count`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        stock_id: currentCountStockId,
+                        physical_quantity: physical,
+                        notes: notes
+                    })
+                });
+
+                showToast('Stok sayımı kaydedildi', 'success');
+                closeCountModal();
+                loadStock();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        function showBulkCountModal() {
+            if (stockData.length === 0) {
+                showToast('Henüz stok yok', 'error');
+                return;
+            }
+
+            const tbody = document.querySelector('#bulkCountTable tbody');
+            tbody.innerHTML = stockData.map(stock => `
+                <tr data-stock-id="${stock.id}">
+                    <td><strong>${stock.item_name}</strong></td>
+                    <td>${stock.quantity} ${stock.unit}</td>
+                    <td>
+                        <input type="number" class="form-input bulk-count-input" 
+                               data-stock-id="${stock.id}" 
+                               data-system-qty="${stock.quantity}"
+                               data-unit="${stock.unit}"
+                               min="0" step="0.1" 
+                               placeholder="0"
+                               style="max-width: 120px;">
+                    </td>
+                    <td class="bulk-diff-${stock.id}">-</td>
+                </tr>
+            `).join('');
+
+            // Auto-calculate discrepancies
+            document.querySelectorAll('.bulk-count-input').forEach(input => {
+                input.oninput = function () {
+                    const physical = parseFloat(this.value) || 0;
+                    const system = parseFloat(this.dataset.systemQty);
+                    const unit = this.dataset.unit;
+                    const stockId = this.dataset.stockId;
+                    const diff = physical - system;
+                    const diffCell = document.querySelector(`.bulk-diff-${stockId}`);
+
+                    if (this.value === '') {
+                        diffCell.innerHTML = '-';
+                    } else {
+                        diffCell.innerHTML = `<span style="color: ${diff < 0 ? '#ef4444' : diff > 0 ? '#10b981' : '#94a3b8'}; font-weight: 700;">${diff > 0 ? '+' : ''}${diff.toFixed(1)} ${unit}</span>`;
+                    }
+                };
+            });
+
+            document.getElementById('bulkCountModal').classList.remove('hidden');
+        }
+
+        function closeBulkCountModal() {
+            document.getElementById('bulkCountModal').classList.add('hidden');
+        }
+
+        async function saveBulkCount() {
+            const inputs = document.querySelectorAll('.bulk-count-input');
+            const counts = [];
+
+            inputs.forEach(input => {
+                if (input.value !== '') {
+                    counts.push({
+                        stock_id: parseInt(input.dataset.stockId),
+                        physical_quantity: parseFloat(input.value)
+                    });
+                }
+            });
+
+            if (counts.length === 0) {
+                showToast('En az bir ürün için sayım yapın', 'error');
+                return;
+            }
+
+            try {
+                await apiCall('/patron/stock/bulk-count', {
+                    method: 'POST',
+                    body: JSON.stringify({ counts })
+                });
+
+                showToast(`${counts.length} ürün için sayım kaydedildi`, 'success');
+                closeBulkCountModal();
+                loadStock();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        function showCountHistory() {
+            showPage('stockHistory');
+
+            // Set default dates (past 30 days)
+            const end = new Date();
+            const start = new Date();
+            start.setDate(start.getDate() - 30);
+
+            document.getElementById('historyStartDate').value = start.toISOString().split('T')[0];
+            document.getElementById('historyEndDate').value = end.toISOString().split('T')[0];
+
+            loadCountHistory();
+        }
+
+        async function loadCountHistory() {
+            try {
+                const start = document.getElementById('historyStartDate').value;
+                const end = document.getElementById('historyEndDate').value;
+
+                const queryParams = new URLSearchParams();
+                if (start) queryParams.append('startDate', start);
+                if (end) queryParams.append('endDate', end);
+
+                console.log('Fetching history with params:', queryParams.toString());
+                const data = await apiCall(`/patron/stock/fire-reports?${queryParams.toString()}`);
+                const tbody = document.querySelector('#historyTable tbody');
+
+                if (!data.reports || data.reports.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem; color: #94a3b8;">Henüz sayım kaydı yok</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.reports.map(report => {
+                    const diff = report.discrepancy;
+                    const diffColor = diff < 0 ? '#ef4444' : diff > 0 ? '#10b981' : '#94a3b8';
+                    return `
+                        <tr>
+                            <td><div style="font-size: 0.85rem;">${formatDateTime(report.count_date)}</div></td>
+                            <td><strong>${report.item_name}</strong></td>
+                            <td>${report.system_quantity} ${report.unit}</td>
+                            <td>${report.physical_quantity} ${report.unit}</td>
+                            <td><strong style="color: ${diffColor}">${diff > 0 ? '+' : ''}${diff} ${report.unit}</strong></td>
+                            <td><small style="color: #94a3b8;">${report.notes || '-'}</small></td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (error) {
+                showToast('Geçmiş yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        let fireChart = null;
+        function showFireAnalysis() {
+            showPage('fireAnalysis');
+            loadFireAnalysis();
+        }
+
+        async function loadFireAnalysis() {
+            try {
+                const data = await apiCall('/patron/stock/fire-reports');
+                const reports = data.reports || [];
+
+                // Metrics
+                const totalFireQty = reports.reduce((acc, r) => acc + (r.discrepancy < 0 ? Math.abs(r.discrepancy) : 0), 0);
+                // Simple cost calculation (assuming current unit_cost)
+                // In a perfect system, we'd store the unit_cost at the time of count.
+                // For now, let's just use 0 if cost is not in report, or try to find it.
+                // We'll need item_cost in the query if possible. Looking at patron.js, it's not there.
+                // Let's settle for quantity for now or try to match with stockData.
+                let totalFireCost = 0;
+                reports.forEach(r => {
+                    if (r.discrepancy < 0) {
+                        const stockItem = stockData.find(s => s.id === r.stock_id);
+                        if (stockItem) totalFireCost += Math.abs(r.discrepancy) * stockItem.unit_cost;
+                    }
+                });
+
+                document.getElementById('totalFireQty').innerHTML = totalFireQty.toFixed(1);
+                document.getElementById('totalFireCost').innerHTML = formatCurrency(totalFireCost);
+
+                // Top Fire Items
+                const itemLosses = {};
+                reports.forEach(r => {
+                    if (r.discrepancy < 0) {
+                        itemLosses[r.item_name] = (itemLosses[r.item_name] || 0) + Math.abs(r.discrepancy);
+                    }
+                });
+
+                const sortedItems = Object.entries(itemLosses).sort((a, b) => b[1] - a[1]);
+                const topItem = sortedItems[0];
+                document.getElementById('topFireItem').innerHTML = topItem ? `${topItem[0]} (${topItem[1].toFixed(0)})` : '-';
+
+                // Render Top Items List
+                const topList = document.getElementById('topFireItemsList');
+                if (sortedItems.length === 0) {
+                    topList.innerHTML = '<div class="text-muted p-lg">Henüz kayıp kaydı yok.</div>';
+                } else {
+                    topList.innerHTML = sortedItems.slice(0, 5).map(([name, qty]) => `
+                        <div class="flex-between mb-sm p-sm aura-card" style="background: rgba(255,255,255,0.02);">
+                            <span>${name}</span>
+                            <strong class="text-danger">-${qty.toFixed(1)}</strong>
+                        </div>
+                    `).join('');
+                }
+
+                // Fire Rate (Very basic: total fire / total stock currently)
+                const totalCurrentStock = stockData.reduce((acc, s) => acc + s.quantity, 0);
+                const fireRate = totalCurrentStock > 0 ? (totalFireQty / (totalCurrentStock + totalFireQty)) * 100 : 0;
+                document.getElementById('fireRate').innerHTML = `%${fireRate.toFixed(1)}`;
+
+                // Charts - Category Based
+                renderFireChart(reports);
+
+            } catch (error) {
+                showToast('Analiz yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        function renderFireChart(reports) {
+            const ctx = document.getElementById('fireCategoryChart').getContext('2d');
+
+            const catLosses = { 'Şampuan': 0, 'Boya': 0, 'Diğer': 0 };
+            reports.forEach(r => {
+                if (r.discrepancy < 0) {
+                    // Try to guess or get type
+                    const stockItem = stockData.find(s => s.id === r.stock_id);
+                    const typeName = stockItem ? (stockItem.item_type === 'shampoo' ? 'Şampuan' : stockItem.item_type === 'dye' ? 'Boya' : 'Diğer') : 'Diğer';
+                    catLosses[typeName] += Math.abs(r.discrepancy);
+                }
+            });
+
+            if (fireChart) fireChart.destroy();
+
+            fireChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(catLosses),
+                    datasets: [{
+                        data: Object.values(catLosses),
+                        backgroundColor: ['#6366f1', '#f59e0b', '#ec4899'],
+                        borderColor: 'transparent'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', font: { size: 11 } }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // ===== FİNANS YÖNETİMİ =====
+        let financeChart = null;
+
+        async function loadFinance() {
+            try {
+                const period = document.getElementById('financePeriod').value;
+                const data = await apiCall(`/patron/finance/stats?period=${period}`);
+
+                // 1. İstatistik Widget'larını Yükle
+                const statsGrid = document.getElementById('financeStatsGrid');
+                if (statsGrid) {
+                    statsGrid.innerHTML = `
+                        <div class="aura-card" style="padding: 1.25rem; position: relative; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03);">
+                            <div style="position: absolute; right: -5px; top: -5px; font-size: 3rem; color: rgba(16, 185, 129, 0.03); transform: rotate(-10deg);"><i class="fas fa-arrow-trend-up"></i></div>
+                            <div class="text-muted small mb-xs" style="text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; font-size: 0.65rem;">Toplam Gelir</div>
+                            <div class="h2 mb-0 text-success" style="font-weight: 800; font-size: 1.5rem;">${formatCurrency(data.stats.income)}</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #10b981; opacity: 0.8;">
+                                <i class="fas fa-caret-up"></i> Nakit Girişi
+                            </div>
+                        </div>
+                        <div class="aura-card" style="padding: 1.25rem; position: relative; overflow: hidden; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.03);">
+                            <div style="position: absolute; right: -5px; top: -5px; font-size: 3rem; color: rgba(239, 68, 68, 0.03); transform: rotate(-10deg);"><i class="fas fa-arrow-trend-down"></i></div>
+                            <div class="text-muted small mb-xs" style="text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; font-size: 0.65rem;">Toplam Gider</div>
+                            <div class="h2 mb-0 text-danger" style="font-weight: 800; font-size: 1.5rem;">${formatCurrency(data.stats.expense)}</div>
+                            <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #ef4444; opacity: 0.8;">
+                                <i class="fas fa-circle-exclamation"></i> Harcamalar
+                            </div>
+                        </div>
+                        <div class="aura-card" style="padding: 1.25rem; position: relative; overflow: hidden; border: 1px solid rgba(139, 92, 246, 0.2); background: linear-gradient(145deg, rgba(139, 92, 246, 0.08), rgba(0,0,0,0.2));">
+                            <div style="position: absolute; right: -5px; top: -5px; font-size: 3rem; color: rgba(139, 92, 246, 0.05); transform: rotate(-10deg);"><i class="fas fa-wallet"></i></div>
+                            <div class="text-muted small mb-xs" style="text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; font-size: 0.65rem; color: var(--aura-primary);">Net Kâr</div>
+                            <div class="h2 mb-0 ${data.stats.net >= 0 ? 'text-success' : 'text-danger'}" style="font-weight: 900; font-size: 1.75rem; text-shadow: 0 0 20px ${data.stats.net >= 0 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)'};">
+                                ${formatCurrency(data.stats.net)}
+                            </div>
+                            <div style="margin-top: 0.5rem; font-size: 0.7rem; color: ${data.stats.net >= 0 ? '#10b981' : '#ef4444'}; opacity: 0.8;">
+                                <i class="fas fa-chart-line"></i> Genel Durum
+                            </div>
+                        </div>
+                        <div class="aura-card" style="padding: 1.25rem; background: rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.02);">
+                            <div class="text-muted small mb-xs" style="text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; font-size: 0.65rem;">İşlem Adedi</div>
+                            <div class="h2 mb-0" style="font-weight: 700; color: #fff; font-size: 1.5rem;">${data.transactions.length} <span style="font-size: 0.85rem; color: #64748b; font-weight: 400;">Kayıt</span></div>
+                            <div style="margin-top: 0.5rem; font-size: 0.7rem; color: #64748b;">
+                                <i class="fas fa-history"></i> Güncel Dönem
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 2. Grafiği Render Et
+                renderFinanceChart(data.trend);
+
+                // 3. Son Gelirler Widget'ını Yükle
+                const recentIncomes = document.getElementById('recentIncomes');
+                if (recentIncomes) {
+                    const incomes = data.transactions.filter(t => t.transaction_type === 'income').slice(0, 5);
+                    if (incomes.length === 0) {
+                        recentIncomes.innerHTML = '<p class="text-muted small" style="text-align: center; padding: 1rem;">Henüz gelir kaydı yok</p>';
+                    } else {
+                        recentIncomes.innerHTML = incomes.map(inc => `
+                            <div class="flex-between" style="padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                <div>
+                                    <div style="font-size: 0.9rem; font-weight: 600; color: #fff;">${inc.description}</div>
+                                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">${formatDate(inc.created_at)}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="text-success" style="font-weight: 700; font-size: 0.95rem;">+${formatCurrency(inc.amount)}</div>
+                                </div>
+                            </div>
+                        `).join('') + `
+                            <div style="padding-top: 0.5rem; text-align: center;">
+                                <a href="javascript:void(0)" onclick="switchAnalyticsTab('history')" style="font-size: 0.75rem; color: var(--aura-primary); text-decoration: none; font-weight: 600;">TÜMÜNÜ GÖR</a>
+                            </div>
+                        `;
+                    }
+                }
+
+                // 4. İşlem Geçmişi Tablosunu Yükle
+                const tbody = document.querySelector('#financeTable tbody');
+                if (!data.transactions || data.transactions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #64748b; padding: 3rem;">Henüz bir finansal işlem kaydı bulunmuyor.</td></tr>';
+                } else {
+                    tbody.innerHTML = data.transactions.map(t => `
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.02); transition: all 0.2s;">
+                            <td style="padding: 1.25rem 1rem;">
+                                <div style="font-size: 0.8rem; color: #64748b; font-weight: 500;">${formatDateTime(t.created_at)}</div>
+                            </td>
+                            <td style="padding: 1.25rem 1rem;">
+                                <span class="aura-badge aura-badge-${t.transaction_type === 'income' ? 'success' : 'danger'}" style="font-size: 0.7rem; font-weight: 700;">
+                                    ${t.transaction_type === 'income' ? 'GELİR' : 'GİDER'}
+                                </span>
+                            </td>
+                            <td style="padding: 1.25rem 1rem;">
+                                <div style="color: #fff; font-weight: 500; font-size: 0.95rem;">${t.description}</div>
+                            </td>
+                            <td style="padding: 1.25rem 1rem;">
+                                <div class="${t.transaction_type === 'income' ? 'text-success' : 'text-danger'}" style="font-weight: 800; font-size: 1rem;">
+                                    ${t.transaction_type === 'income' ? '+' : '-'}${formatCurrency(t.amount)}
+                                </div>
+                            </td>
+                            <td style="padding: 1.25rem 1rem; text-align: right;">
+                                <button class="btn-icon" onclick="deleteTransaction(${t.id})" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.1);">
+                                    <i class="fas fa-trash-alt" style="font-size: 0.8rem;"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                showToast('Finans verileri yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        function renderFinanceChart(trend) {
+            const ctx = document.getElementById('financeTrendChart').getContext('2d');
+            if (financeChart) financeChart.destroy();
+
+            financeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: trend.map(t => formatDate(t.date)),
+                    datasets: [
+                        {
+                            label: 'Gelir',
+                            data: trend.map(t => t.income),
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Gider',
+                            data: trend.map(t => t.expense),
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { color: '#94a3b8' } }
+                    },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                    }
+                }
+            });
+        }
+
+        function showTransactionModal(type) {
+            document.getElementById('transactionType').value = type;
+            document.getElementById('transactionModalTitle').innerText = type === 'income' ? 'Gelir Ekle' : 'Gider Ekle';
+            document.getElementById('transactionModal').classList.remove('hidden');
+        }
+
+        function closeTransactionModal() {
+            document.getElementById('transactionModal').classList.add('hidden');
+            document.getElementById('transactionForm').reset();
+        }
+
+        async function saveTransaction() {
+            const type = document.getElementById('transactionType').value;
+            const amount = document.getElementById('transactionAmount').value;
+            const description = document.getElementById('transactionDesc').value;
+            const date = document.getElementById('transactionDate').value;
+
+            if (!amount || !description) {
+                showToast('Lütfen tüm alanları doldurun', 'error');
+                return;
+            }
+
+            try {
+                await apiCall('/patron/finance/transaction', {
+                    method: 'POST',
+                    body: JSON.stringify({ type, amount, description, date })
+                });
+                showToast('İşlem kaydedildi', 'success');
+                document.getElementById('transactionModal').classList.add('hidden');
+                document.getElementById('transactionForm').reset();
+                loadFinance();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function deleteTransaction(id) {
+            if (!confirm('Bu işlemi silmek istediğinizden emin misiniz?')) return;
+            try {
+                await apiCall(`/patron/finance/transaction/${id}`, { method: 'DELETE' });
+                showToast('İşlem silindi', 'success');
+                loadFinance();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // ===== AYARLAR =====
+        async function loadSettings() {
+            try {
+                const data = await apiCall('/patron/settings');
+                console.log('Settings data received:', data);
+                if (!data || !data.salon) throw new Error('Salon verileri eksik');
+
+                // Salon Bilgileri - Form elementlerini name'e göre seçiyoruz
+                const form = document.getElementById('salonSettingsForm');
+                if (form) {
+                    form.querySelector('[name="salon_name"]').value = data.salon.name || '';
+                    form.querySelector('[name="phone"]').value = data.salon.phone || '';
+                    form.querySelector('[name="email"]').value = data.salon.email || '';
+                    form.querySelector('[name="address"]').value = data.salon.address || '';
+                }
+
+                // Çalışma Saatleri
+                const days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+                const hoursBody = document.querySelector('#salonHoursTable tbody');
+                const hoursData = data.hours || [];
+
+                hoursBody.innerHTML = [0, 1, 2, 3, 4, 5, 6].map(day => {
+                    const h = hoursData.find(x => x.day_of_week === day) || { start_time: '09:00', end_time: '19:00', is_closed: 0 };
+                    return `
+                        <tr>
+                            <td><strong style="color: #fff;">${days[day]}</strong></td>
+                            <td><input type="time" class="form-input start-time" value="${h.start_time || '09:00'}"></td>
+                            <td><input type="time" class="form-input end-time" value="${h.end_time || '19:00'}"></td>
+                            <td>
+                                <label class="aura-badge" style="cursor: pointer; background: ${h.is_closed ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255, 255, 255, 0.05)'}; color: ${h.is_closed ? '#ef4444' : '#94a3b8'};">
+                                    <input type="checkbox" class="closed-check hidden" ${h.is_closed ? 'checked' : ''} onchange="this.parentElement.style.background = this.checked ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255, 255, 255, 0.05)'; this.parentElement.style.color = this.checked ? '#ef4444' : '#94a3b8';">
+                                    <span>${h.is_closed ? 'KAPALI' : 'AÇIK'}</span>
+                                </label>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('loadSettings error:', error);
+                showToast('Ayarlar yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        async function saveSalonSettings(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                await apiCall('/patron/settings', {
+                    method: 'PATCH',
+                    body: JSON.stringify(data)
+                });
+                showToast('Salon bilgileri güncellendi', 'success');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function saveSalonHours() {
+            const hours = [];
+            const rows = document.querySelectorAll('#salonHoursTable tbody tr');
+            rows.forEach((row, index) => {
+                hours.push({
+                    day: index,
+                    start: row.querySelector('.start-time').value,
+                    end: row.querySelector('.end-time').value,
+                    is_closed: row.querySelector('.closed-check').checked
+                });
+            });
+
+            try {
+                await apiCall('/patron/settings/hours', {
+                    method: 'POST',
+                    body: JSON.stringify({ hours })
+                });
+                showToast('Çalışma saatleri güncellendi', 'success');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function updatePassword(e) {
+            e.preventDefault();
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showToast('Yeni şifreler eşleşmiyor', 'error');
+                return;
+            }
+
+            try {
+                await apiCall('/patron/settings/password', {
+                    method: 'PATCH',
+                    body: JSON.stringify({ oldPassword, newPassword })
+                });
+                showToast('Şifre başarıyla değiştirildi', 'success');
+                e.target.reset();
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // ===== REÇETE YÖNETİMİ =====
+        let currentRecipeServiceId = null;
+
+        function showRecipeModal(serviceId, serviceName) {
+            currentRecipeServiceId = serviceId;
+            document.getElementById('recipeModalTitle').innerText = `${serviceName} - Reçete`;
+            document.getElementById('recipeModal').classList.remove('hidden');
+            loadRecipe(serviceId);
+
+            // Fill stock select
+            const select = document.getElementById('recipeProductSelect');
+            if (select && typeof stockData !== 'undefined') {
+                select.innerHTML = '<option value="">Ürün Seçin</option>' +
+                    stockData.map(s => `<option value="${s.id}">${s.item_name} (${s.unit})</option>`).join('');
+            }
+        }
+
+        function closeRecipeModal() {
+            document.getElementById('recipeModal').classList.add('hidden');
+            document.getElementById('recipeProductSelect').value = '';
+            document.getElementById('recipeQuantity').value = '';
+        }
+
+        async function loadRecipe(serviceId) {
+            try {
+                const data = await apiCall(`/patron/services/${serviceId}/recipe`);
+                const tbody = document.querySelector('#recipeTable tbody');
+
+                if (!data.recipe || data.recipe.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #64748b;">Reçete tanımlanmamış</td></tr>';
+                } else {
+                    tbody.innerHTML = data.recipe.map(item => `
+                        <tr>
+                            <td><strong style="color: #fff;">${item.item_name}</strong></td>
+                            <td>${item.quantity} ${item.unit}</td>
+                            <td>${formatCurrency(item.unit_cost * item.quantity)}</td>
+                            <td>
+                                <button class="btn-icon active-danger" onclick="removeRecipeItem(${item.stock_id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                showToast('Reçete yüklenemedi: ' + error.message, 'error');
+            }
+        }
+
+        async function addRecipeItem() {
+            const stockId = document.getElementById('recipeProductSelect').value;
+            const quantity = document.getElementById('recipeQuantity').value;
+
+            if (!stockId || !quantity) {
+                showToast('Lütfen ürün ve miktar seçin', 'error');
+                return;
+            }
+
+            try {
+                await apiCall(`/patron/services/${currentRecipeServiceId}/recipe`, {
+                    method: 'POST',
+                    body: JSON.stringify({ stock_id: stockId, quantity: parseFloat(quantity) })
+                });
+                showToast('Ürün reçeteye eklendi', 'success');
+                loadRecipe(currentRecipeServiceId);
+                document.getElementById('recipeQuantity').value = '';
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        async function removeRecipeItem(stockId) {
+            if (!confirm('Bu ürünü reçeteden çıkarmak istediğinizden emin misiniz?')) return;
+            try {
+                await apiCall(`/patron/services/${currentRecipeServiceId}/recipe/${stockId}`, {
+                    method: 'DELETE'
+                });
+                showToast('Ürün reçeteden çıkarıldı', 'success');
+                loadRecipe(currentRecipeServiceId);
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        // Form Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const salonForm = document.getElementById('salonSettingsForm');
+            if (salonForm) {
+                salonForm.addEventListener('submit', saveSalonSettings);
+            }
+
+            const passwordForm = document.getElementById('passwordSettingsForm');
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', updatePassword);
+            }
+        });
+
+        // Initial load
+        showPage('dashboard');
+    </script>
+</body>
+
+</html>

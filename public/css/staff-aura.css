@@ -1,0 +1,274 @@
+/* Staff Dashboard Specific Styles */
+.staff-header-aura {
+    padding: 1.5rem 2rem;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--aura-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.staff-container-aura {
+    padding: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Mobile-first layout for staff */
+.header {
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(20px);
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.user-info h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-family: var(--font-heading);
+    color: #fff;
+}
+
+.user-info p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.container {
+    padding: 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Staff Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Appointment Cards */
+.appointment-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.appointment-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--aura-primary);
+    transform: translateY(-2px);
+}
+
+.appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.appointment-time {
+    font-size: 1.125rem;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    color: var(--aura-primary);
+}
+
+.appointment-info {
+    margin-bottom: 0.5rem;
+}
+
+.appointment-info strong {
+    color: #fff;
+    font-family: var(--font-heading);
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-family: var(--font-heading);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background: var(--aura-primary);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #7c3aed;
+    transform: translateY(-2px);
+}
+
+.btn-complete {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-complete:hover {
+    background: #059669;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-around;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.nav-item.active {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--aura-primary);
+}
+
+.nav-item i {
+    font-size: 1.25rem;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+}
+
+.modal-content {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-family: var(--font-heading);
+    color: #fff;
+}
+
+.close {
+    color: #94a3b8;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #fff;
+}
+
+/* Utilities */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #64748b;
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.badge-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}

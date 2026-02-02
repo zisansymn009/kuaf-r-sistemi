@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Widget Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #111827;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        .info {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(107, 70, 193, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(107, 70, 193, 0.3);
+        }
+        h1 {
+            margin-top: 0;
+            color: #fbbf24;
+        }
+        .instructions {
+            line-height: 1.6;
+        }
+        .instructions li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h1>🧪 AURA Chat Widget Test</h1>
+        <div class="instructions">
+            <p><strong>Test Talimatları:</strong></p>
+            <ol>
+                <li>Sağ alt köşedeki mor butona tıklayın</li>
+                <li>Chat penceresi açılacak</li>
+                <li>Birkaç mesaj gönderin</li>
+                <li>Mesajların tamamını görebildiğinizi kontrol edin</li>
+                <li>Scroll çubuğunun çalıştığını test edin</li>
+            </ol>
+            <p><strong>Beklenen Davranış:</strong></p>
+            <ul>
+                <li>✅ Tüm mesajlar tam görünmeli</li>
+                <li>✅ Scroll çubuğu otomatik en alta gitmeli</li>
+                <li>✅ Uzun mesajlar kelime bazında satır atlamalı</li>
+                <li>✅ Hiçbir metin kesilmemeli</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Chat Widget Script -->
+    <script src="/js/ai-chat.js?v=<?php echo time(); ?>"></script>
+</body>
+</html>

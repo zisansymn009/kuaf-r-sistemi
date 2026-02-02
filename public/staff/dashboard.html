@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personel Paneli - AURA</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/css/aura-ui.css">
+    <style>
+        :root {
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --aura-primary: #fbbf24;
+            --aura-glass: rgba(255, 255, 255, 0.03);
+            --aura-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background: #0f172a;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(251, 191, 36, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            font-family: var(--font-body);
+            color: #cbd5e1;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: left;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--aura-border);
+            padding-bottom: 1.5rem;
+        }
+
+        .header-content h1 {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-content h1 i {
+            color: var(--aura-primary);
+        }
+
+        .header-content p {
+            color: #64748b;
+            margin-top: 0.25rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Aura Notification Card - Corporate Style */
+        .aura-notification {
+            background: rgba(251, 191, 36, 0.05);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .aura-notification .icon {
+            color: var(--aura-primary);
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+
+        .aura-notification strong {
+            color: #fff;
+            font-family: var(--font-heading);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .aura-notification p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.5;
+            color: #e2e8f0;
+        }
+
+        /* Stats Grid - Pro */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .btn-logout {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .stat-card {
+            background: var(--aura-glass);
+            border: 1px solid var(--aura-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-label {
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-sub {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        /* Quick Actions Grid - Minimalist */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .quick-action-btn {
+            background: var(--aura-glass);
+            border: 1px solid var(--aura-border);
+            border-radius: 12px;
+            padding: 1.25rem 0.75rem;
+            color: #cbd5e1;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            height: 100%;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--aura-primary);
+            transform: translateY(-2px);
+            color: #fff;
+        }
+
+        .quick-action-btn i {
+            font-size: 1.25rem;
+            color: var(--aura-primary);
+            opacity: 0.8;
+            transition: 0.2s;
+        }
+
+        .quick-action-btn:hover i {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .quick-action-btn span {
+            font-weight: 500;
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+
+        /* Appointments Section */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--aura-border);
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 0;
+            letter-spacing: -0.01em;
+        }
+
+        .appointment-card {
+            background: var(--aura-glass);
+            border: 1px solid var(--aura-border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .appointment-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .appointment-time {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--aura-primary);
+            background: rgba(251, 191, 36, 0.1);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            min-width: 65px;
+            text-align: center;
+        }
+
+        .appointment-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: #fff;
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .appointment-info p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        /* Chat/Modal Polish */
+        .modal-content {
+            background: #0f172a;
+            border: 1px solid var(--aura-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 16px;
+        }
+
+        .modal-header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem 1.5rem;
+        }
+
+        .btn-action {
+            background: var(--aura-primary);
+            color: #0f172a;
+            border: none;
+            padding: 0.6rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-action:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-logout {
+            position: static;
+            background: transparent;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.15);
+            transform: translateY(-1px);
+        }
+
+        /* ------------------------------------------------------------------
+           MODERN CHAT UI & MODAL OVERHAUL
+           ------------------------------------------------------------------ */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.7);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 550px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalPop {
+            0% {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: #0f172a;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Temizlenmiş Kapatma Butonu */
+        .btn-close-modal {
+            background: transparent;
+            border: none;
+            color: #64748b;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.1rem;
+        }
+
+        .btn-close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ef4444;
+            transform: rotate(90deg);
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            min-height: 300px;
+            max-height: 450px;
+            overflow-y: auto;
+            background: #1e293b;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .chat-message {
+            max-width: 85%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .chat-message.aura {
+            align-self: flex-start;
+        }
+
+        .chat-message.user {
+            align-self: flex-end;
+        }
+
+        .chat-message .bubble {
+            padding: 1rem 1.25rem;
+            position: relative;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-message.aura .bubble {
+            background: #334155;
+            color: #f1f5f9;
+            border-radius: 18px 18px 18px 4px;
+        }
+
+        .chat-message.user .bubble {
+            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+            color: #0f172a;
+            font-weight: 500;
+            border-radius: 18px 18px 4px 18px;
+        }
+
+        /* Input Area */
+        .chat-input-container {
+            background: #0f172a;
+            padding: 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .chat-input-container input {
+            flex: 1;
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #fff !important;
+            border-radius: 12px !important;
+            padding: 1rem 1.25rem !important;
+            font-family: var(--font-body) !important;
+            font-size: 0.95rem !important;
+            height: auto !important;
+            transition: all 0.2s !important;
+        }
+
+        .chat-input-container input:focus {
+            border-color: var(--aura-primary) !important;
+            background: rgba(30, 41, 59, 0.8) !important;
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.1) !important;
+            outline: none !important;
+        }
+
+        .chat-input-container button {
+            background: var(--aura-primary) !important;
+            color: #0f172a !important;
+            border: none !important;
+            border-radius: 12px !important;
+            width: 52px !important;
+            height: 52px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            font-size: 1.2rem !important;
+            transition: all 0.2s !important;
+            padding: 0 !important;
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2) !important;
+        }
+
+        .chat-input-container button:hover {
+            transform: translateY(-2px) !important;
+            background: #f59e0b !important;
+            box-shadow: 0 8px 16px rgba(251, 191, 36, 0.3) !important;
+        }
+
+        .info-response {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: #cbd5e1;
+            white-space: pre-line;
+            line-height: 1.6;
+            margin-top: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+    </style>
+</head>
+
+<body class="aura-theme">
+    <div class="mesh-bg"></div>
+
+    <div class="container">
+        <!-- Modern Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-gem"></i> AURA</h1>
+                <p id="staffName">Personel Paneli</p>
+            </div>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Çıkış
+            </button>
+        </div>
+
+        <!-- Aura Notification -->
+        <div class="aura-notification" id="auraNotification" style="display: none;">
+            <div class="icon"><i class="fas fa-bell"></i></div>
+            <div class="content">
+                <strong>Bildirim</strong>
+                <p id="notificationText"></p>
+            </div>
+        </div>
+
+        <!-- Staff Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Tahmini Kazanç</div>
+                <div class="stat-value" id="statEarnings">₺0,00</div>
+                <div class="stat-sub">Bugünkü Prim</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Tamamlanan</div>
+                <div class="stat-value" id="statCompleted">0</div>
+                <div class="stat-sub">Hizmet Verildi</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="quick-action-btn" onclick="quickAction('today-appointments')">
+                <i class="fas fa-calendar-check"></i>
+                <span>Bugün</span>
+            </button>
+            <button class="quick-action-btn" onclick="quickAction('customer-history')">
+                <i class="fas fa-history"></i>
+                <span>Geçmiş</span>
+            </button>
+            <button class="quick-action-btn" onclick="quickAction('product-query')">
+                <i class="fas fa-pump-soap"></i>
+                <span>Ürün Sor</span>
+            </button>
+            <button class="quick-action-btn" onclick="openShiftModal()">
+                <i class="fas fa-clock"></i>
+                <span>Vardiyam</span>
+            </button>
+            <button class="quick-action-btn" onclick="openAuraChat()">
+                <i class="fas fa-robot"></i>
+                <span>Asistan</span>
+            </button>
+        </div>
+
+        <!-- Quick Info Response -->
+        <div id="quickInfoResponse" style="display: none;" class="info-response"></div>
+
+        <!-- Today's Appointments -->
+        <div class="section-header">
+            <h2 class="section-title"><i class="far fa-clock text-primary mb-0"
+                    style="margin-right: 8px; color: var(--aura-primary);"></i> Randevu Akışı</h2>
+        </div>
+
+        <div id="appointmentsList">
+            <div
+                style="text-align: center; padding: 3rem; color: #64748b; background: var(--aura-glass); border-radius: 12px; border: 1px solid var(--aura-border);">
+                <i class="fas fa-circle-notch fa-spin fa-2x" style="margin-bottom: 1rem;"></i>
+                <p class="font-medium">Veriler yükleniyor...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aura Chat Modal -->
+    <div id="auraModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-robot text-primary"></i> Aura Asistan</h3>
+                <button class="btn-close-modal" onclick="closeAuraModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message aura">
+                    <div class="bubble">
+                        Merhaba! Ben Aura 👋 Size nasıl yardımcı olabilirim?
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" placeholder="Bir şey sor..." onkeypress="handleChatKeypress(event)"
+                    autocomplete="off">
+                <button onclick="sendChatMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointment Complete Modal -->
+    <div id="completeModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-check-circle text-success"></i> İşlemi Tamamla</h3>
+                <button class="btn-close-modal" onclick="closeCompleteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div style="padding: 1.5rem;" id="completeForm">
+                <div
+                    style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <strong id="completeCustomerName"
+                        style="color: #fbbf24; display: block; font-size: 1.1rem;"></strong>
+                    <span id="completeServiceName" style="color: #94a3b8; font-size: 0.9rem;"></span>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; color: #cbd5e1; margin-bottom: 0.5rem;">İşlem Notları / Kullanılan
+                        Ürünler</label>
+                    <textarea id="completeNote" rows="3"
+                        style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; padding: 0.75rem;"
+                        placeholder="Örn: 7.1 boya kullanıldı, müşteri memnun..."></textarea>
+                </div>
+
+                <button id="btnCompleteSubmit" onclick="submitCompletion()"
+                    style="width: 100%; padding: 1rem; background: #10b981; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem;">
+                    İşlemi Tamamla
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shift Modal -->
+    <div id="shiftModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-alt text-primary"></i> Haftalık Vardiyam</h3>
+                <button class="btn-close-modal" onclick="closeShiftModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div style="padding: 1.5rem;">
+                <div id="shiftList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <!-- JS ile dolacak -->
+                    <div style="text-align: center; color: #64748b;">Yükleniyor...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/utils.js"></script>
+    <script>
+        let chatHistory = [];
+        let mySchedule = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = UserManager.get();
+            if (!user || user.role !== 'STAFF') {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            document.getElementById('staffName').innerHTML = `<i class="fas fa-user-circle" style="margin-right: 5px;"></i> ${user.full_name}`;
+
+            // Initial Load
+            loadTodayAppointments();
+        });
+
+        // Logout Function (Robust)
+        function logout() {
+            try {
+                TokenManager.remove();
+                UserManager.remove();
+                localStorage.clear();
+            } catch (e) {
+                console.error('Logout error:', e);
+            }
+            window.location.href = '/login.html';
+        }
+
+        async function loadTodayAppointments() {
+            try {
+                // Add timestamp to prevent caching
+                const timestamp = new Date().getTime();
+                const data = await apiCall(`/staff/dashboard?t=${timestamp}`);
+
+                // Store schedule
+                if (data.schedule) {
+                    mySchedule = data.schedule;
+                }
+
+                // Update Stats
+                if (data.stats) {
+                    document.getElementById('statEarnings').innerText = formatCurrency(data.stats.estimatedEarnings || 0);
+                    document.getElementById('statCompleted').innerText = data.stats.completedToday;
+                }
+
+                const appointments = data.today || [];
+                const list = document.getElementById('appointmentsList');
+
+                if (appointments.length === 0) {
+                    list.innerHTML = `
+                        <div style="text-align: center; padding: 4rem 2rem; color: #64748b; background: var(--aura-glass); border-radius: 12px; border: 1px solid var(--aura-border);">
+                            <i class="fas fa-calendar-check fa-4x" style="opacity: 0.2; margin-bottom: 1.5rem; color: #fff; display: block;"></i>
+                            <p style="font-size: 1.1rem; font-weight: 500; color: #94a3b8;">Bugün için planlanmış randevunuz bulunmuyor.</p>
+                            <p style="font-size: 0.9rem; opacity: 0.6;">Kahveni al ve keyfine bak ☕</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = appointments.map(apt => `
+                    <div class="appointment-card">
+                        <div class="appointment-time">${apt.appointment_time}</div>
+                        <div class="appointment-info">
+                            <h4>${apt.customer_name}</h4>
+                            <p>${apt.service_name || 'Hizmet belirtilmemiş'} <span style="opacity: 0.5;">•</span> ₺${apt.price} <span style="opacity: 0.5;">•</span> ${apt.duration} dk</p>
+                        </div>
+                        <div style="margin-left: auto;">
+                            ${apt.status === 'completed'
+                        ? '<span class="aura-badge aura-badge-success" style="padding: 0.5rem 1rem; border-radius: 8px; background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.85rem;"><i class="fas fa-check-circle"></i> Tamamlandı</span>'
+                        : `<button onclick="openCompleteModal(${apt.id}, '${apt.customer_name}', '${apt.service_name}')" class="btn-action">
+                                    <i class="fas fa-check"></i> Tamamla
+                                   </button>`
+                    }
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error('Appointments load error:', error);
+                // Hata mesajını göstermeden önce list elementinin varlığını kontrol et
+                const list = document.getElementById('appointmentsList');
+                if (list) {
+                    list.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #ef4444;">
+                            <i class="fas fa-exclamation-triangle fa-2x" style="margin-bottom: 1rem;"></i>
+                            <p>Randevular yüklenirken hata oluştu</p>
+                            <p style="font-size: 0.875rem; opacity: 0.7;">${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        let currentAppointmentId = null;
+
+        function openCompleteModal(id, customer, service) {
+            currentAppointmentId = id;
+            document.getElementById('completeCustomerName').innerText = customer;
+            document.getElementById('completeServiceName').innerText = service;
+            const modal = document.getElementById('completeModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeCompleteModal() {
+            document.getElementById('completeModal').style.display = 'none';
+            document.getElementById('completeNote').value = '';
+        }
+
+        async function submitCompletion() {
+            if (!currentAppointmentId) return;
+
+            const notes = document.getElementById('completeNote').value;
+            const btn = document.getElementById('btnCompleteSubmit');
+
+            try {
+                if (btn) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Kaydediliyor...';
+                }
+
+                await apiCall(`/staff/appointments/${currentAppointmentId}/complete`, {
+                    method: 'POST',
+                    body: JSON.stringify({ notes })
+                });
+
+                showToast('Randevu başarıyla tamamlandı. Eline sağlık! 👏', 'success');
+                closeCompleteModal();
+                loadTodayAppointments();
+
+            } catch (error) {
+                showToast(error.message, 'error');
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = 'İşlemi Tamamla';
+                }
+            }
+        }
+
+        async function openShiftModal() {
+            // Verileri tazele
+            await loadTodayAppointments();
+
+            const modal = document.getElementById('shiftModal');
+            const list = document.getElementById('shiftList');
+            modal.style.display = 'flex';
+
+            if (!mySchedule || mySchedule.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 1rem;"><i class="fas fa-info-circle" style="margin-bottom: 0.5rem; display: block;"></i> Henüz vardiya bilgisi girilmemiş.</div>';
+                return;
+            }
+
+            const days = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+            const todayIndex = new Date().getDay();
+
+            list.innerHTML = mySchedule.map(s => {
+                const dayName = days[s.day_of_week];
+                const isToday = todayIndex === s.day_of_week;
+
+                // Format times properly
+                const start = s.start_time || '-';
+                const end = s.end_time || '-';
+
+                return `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: ${isToday ? 'rgba(251, 191, 36, 0.1)' : 'rgba(255,255,255,0.03)'}; border-radius: 12px; border: 1px solid ${isToday ? 'rgba(251, 191, 36, 0.3)' : 'transparent'}; transition: transform 0.2s;">
+                    <span style="font-weight: 600; color: ${isToday ? '#fbbf24' : '#e2e8f0'}; display: flex; align-items: center; gap: 0.5rem;">
+                        ${dayName} 
+                        ${isToday ? '<span style="font-size:0.65em; background:#fbbf24; color:#0f172a; padding:2px 8px; border-radius:12px; font-weight: 700;">BUGÜN</span>' : ''}
+                    </span>
+                    <span style="font-weight: 500; font-family: var(--font-body); color: ${s.is_off ? '#ef4444' : '#94a3b8'}">
+                        ${s.is_off ? '<i class="fas fa-ban" style="margin-right: 4px;"></i> İZİNLİ' : `<i class="far fa-clock" style="margin-right: 4px;"></i> ${start} - ${end}`}
+                    </span>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function closeShiftModal() {
+            document.getElementById('shiftModal').style.display = 'none';
+        }
+
+        async function quickAction(action) {
+            const responseDiv = document.getElementById('quickInfoResponse');
+            responseDiv.style.display = 'flex';
+            responseDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Bilgi alınıyor...';
+
+            try {
+                const data = await apiCall('/ai/staff/quick-info', {
+                    method: 'POST',
+                    body: JSON.stringify({ action })
+                });
+
+                responseDiv.innerHTML = `<i class="fas fa-robot text-primary" style="margin-top: 4px;"></i> <div>${data.response}</div>`;
+            } catch (error) {
+                responseDiv.innerHTML = 'Bir hata oluştu. Lütfen tekrar dene.';
+            }
+        }
+
+        function openAuraChat() {
+            const modal = document.getElementById('auraModal');
+            modal.style.display = 'flex';
+            document.getElementById('chatInput').focus();
+        }
+
+        function closeAuraModal() {
+            document.getElementById('auraModal').style.display = 'none';
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addChatMessage(message, 'user');
+            input.value = '';
+            chatHistory.push({ sender: 'user', text: message });
+
+            const loadingId = addChatMessage('Düşünüyorum...', 'aura');
+
+            try {
+                const data = await apiCall('/ai/staff/chat', {
+                    method: 'POST',
+                    body: JSON.stringify({ message, history: chatHistory })
+                });
+
+                document.getElementById(loadingId).remove();
+                addChatMessage(data.response, 'aura');
+                chatHistory.push({ sender: 'aura', text: data.response });
+
+            } catch (error) {
+                if (document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+                addChatMessage('Üzgünüm, bir hata oluştu. Lütfen tekrar dene.', 'aura');
+            }
+        }
+
+        function addChatMessage(text, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageId = 'msg-' + Date.now();
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}`;
+            messageDiv.id = messageId;
+            messageDiv.innerHTML = `<div class="bubble">${text}</div>`;
+
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            return messageId;
+        }
+
+        window.onclick = function (event) {
+            const auraModal = document.getElementById('auraModal');
+            const completeModal = document.getElementById('completeModal');
+            const shiftModal = document.getElementById('shiftModal');
+
+            if (event.target == auraModal) closeAuraModal();
+            if (event.target == completeModal) closeCompleteModal();
+            if (event.target == shiftModal) closeShiftModal();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personel Kayıt - Kuaför Aura</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            padding: var(--spacing-md);
+        }
+
+        .register-container {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .register-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .register-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .register-header p {
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-submit:hover {
+            background: #5558e3;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .register-footer {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+        }
+
+        .register-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <h1>Personel Kayıt</h1>
+                <p>Salona katılmak için başvurun</p>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                Başvurunuz alındı! Salon sahibi onayladıktan sonra giriş yapabileceksiniz.
+            </div>
+
+            <form id="staffRegisterForm">
+                <div class="form-group">
+                    <label class="form-label">Salon Seçin *</label>
+                    <select id="salonId" class="form-select" required>
+                        <option value="">Salon seçiniz...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ad Soyad *</label>
+                    <input type="text" id="fullName" class="form-input" placeholder="Adınız ve soyadınız" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">E-posta</label>
+                    <input type="email" id="email" class="form-input" placeholder="ornek@email.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Telefon</label>
+                    <input type="tel" id="phone" class="form-input" placeholder="05XX XXX XX XX" maxlength="13">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Kullanıcı Adı *</label>
+                    <input type="text" id="username" class="form-input" placeholder="Kullanıcı adınız" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Şifre *</label>
+                    <input type="password" id="password" class="form-input" placeholder="Güçlü bir şifre seçin"
+                        required>
+                </div>
+
+                <button type="submit" class="btn-submit">Başvuru Gönder</button>
+            </form>
+
+            <div class="register-footer">
+                <p class="text-muted">Zaten hesabınız var mı? <a href="/login.html">Giriş Yap</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/utils.js"></script>
+    <script>
+        // Load salons
+        async function loadSalons() {
+            try {
+                const response = await fetch('/api/public/salons');
+                const data = await response.json();
+
+                const select = document.getElementById('salonId');
+                data.salons.forEach(salon => {
+                    const option = document.createElement('option');
+                    option.value = salon.id;
+                    option.textContent = salon.name;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Salon yükleme hatası:', error);
+                showToast('Salonlar yüklenemedi', 'error');
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('staffRegisterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                salon_id: document.getElementById('salonId').value,
+                full_name: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value
+            };
+
+            try {
+                const response = await fetch('/api/public/staff-register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Kayıt başarısız');
+                }
+
+                // Show success message
+                document.getElementById('successMessage').classList.add('show');
+                document.getElementById('staffRegisterForm').reset();
+
+                showToast('Başvurunuz alındı! Onay bekleniyor...', 'success');
+
+                // Redirect to login after 3 seconds
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 3000);
+
+            } catch (error) {
+                console.error('Kayıt hatası:', error);
+                showToast(error.message, 'error');
+            }
+        });
+
+        // Load salons on page load
+        loadSalons();
+    </script>
+</body>
+
+</html>
