@@ -123,7 +123,16 @@ h6 {
 
     .main-content-aura {
         margin-left: 0 !important;
-        padding: 5rem 1rem 2rem 1rem !important;
+        padding: 5.5rem 1.25rem 2rem 1.25rem !important;
+    }
+
+    .grid-4,
+    .grid-3,
+    .grid-2,
+    .grid-3-1,
+    .grid-2-3,
+    .grid-1-3 {
+        grid-template-columns: 1fr !important;
     }
 }
 
@@ -265,7 +274,10 @@ h6 {
 
     .grid-4,
     .grid-3,
-    .grid-2 {
+    .grid-2,
+    .grid-3-1,
+    .grid-2-3,
+    .grid-1-3 {
         grid-template-columns: 1fr !important;
     }
 }
@@ -569,19 +581,10 @@ h6 {
 
 @media (max-width: 600px) {
 
-    input,
-    select,
-    textarea,
-    .form-input {
-        font-size: 16px !important;
-    }
-}
-
-@media (max-width: 600px) {
-
     .form-input,
     input,
-    select {
+    select,
+    textarea {
         font-size: 16px !important;
     }
 }
@@ -899,7 +902,7 @@ h6 {
 /* Portrait Mobile Adjustments */
 @media (max-width: 480px) {
     .main-content-aura {
-        padding: 4.5rem 0.75rem 2rem 0.75rem !important;
+        padding: 4.5rem 0.85rem 2rem 0.85rem !important;
     }
 
     .aura-card {
@@ -912,7 +915,7 @@ h6 {
     }
 
     .grid {
-        gap: 1rem !important;
+        gap: 1.25rem !important;
         grid-template-columns: 1fr !important;
     }
 
@@ -928,10 +931,17 @@ h6 {
         font-size: 1.1rem !important;
     }
 
-    input,
-    select,
-    textarea,
-    .form-input {
-        font-size: 16px !important;
+    .modal {
+        padding: 1rem;
+    }
+
+    .modal-content {
+        border-radius: 24px;
+    }
+
+    .table-aura td,
+    .table-aura th {
+        padding: 1rem 0.75rem;
+        font-size: 0.85rem;
     }
 }

@@ -354,7 +354,7 @@ body.aura-theme::after {
         display: none;
     }
 
-    /* Prevent auto-zoom on iOS/Android and improve accessibility */
+    /* Prevent auto-zoom and improve mobile interaction */
     input,
     select,
     textarea,
@@ -364,16 +364,40 @@ body.aura-theme::after {
 
     .btn-full {
         min-height: 52px;
-        padding: 0 1.5rem;
     }
 
-    .aura-chat-container {
-        padding: 1rem;
+    /* Ensure ALL grids collapse on tablet/mobile */
+    .grid-4,
+    .grid-3,
+    .grid-2,
+    .grid-3-1,
+    .grid-2-3,
+    .grid-1-3 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Base Grid Layouts */
+.grid-3-1 {
+    grid-template-columns: 3fr 1fr;
+}
+
+.grid-2-3 {
+    grid-template-columns: 2fr 3fr;
+}
+
+.grid-1-3 {
+    grid-template-columns: 1fr 3fr;
+}
+
+@media (max-width: 480px) {
+    .aura-card {
+        padding: 1.25rem !important;
         border-radius: 20px;
     }
 
-    .chat-input-wrapper {
-        padding: 0.4rem 0.4rem 0.4rem 1.25rem;
+    .grid {
+        gap: 1rem !important;
     }
 }
 
