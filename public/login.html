@@ -9,7 +9,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/aura-ui.css">
+    <link rel="stylesheet" href="/css/aura-ui.css?v=1.1">
     <style>
         .login-container {
             min-height: 100vh;
@@ -143,6 +143,13 @@
         .back-link:hover {
             color: #fff;
         }
+
+        /* Mobil buton görünürlük garantisi */
+        .btn-login {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
     </style>
 </head>
 
@@ -175,7 +182,7 @@
                             <input type="password" id="loginPassword" class="form-input" placeholder="••••••••"
                                 required>
                         </div>
-                        <button type="submit" class="nav-btn nav-btn-primary btn-full">OTURUM AÇ</button>
+                        <button type="submit" class="nav-btn nav-btn-primary btn-full btn-login">OTURUM AÇ</button>
                     </form>
                 </div>
 
