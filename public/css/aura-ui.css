@@ -346,7 +346,7 @@ body.aura-theme::after {
         padding: 1.5rem;
     }
 
-    .nav-btn {
+    .aura-nav .nav-btn {
         display: none;
     }
 }
