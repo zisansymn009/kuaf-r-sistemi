@@ -123,7 +123,7 @@ h6 {
 
     .main-content-aura {
         margin-left: 0 !important;
-        padding: 6rem 1.5rem 2rem 1.5rem !important;
+        padding: 5rem 1rem 2rem 1rem !important;
     }
 }
 
@@ -255,12 +255,18 @@ h6 {
     border-bottom: 1px solid var(--aura-border);
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 1024px) {
     .dashboard-mobile-header {
         display: flex;
+    }
+
+    .grid-4,
+    .grid-3,
+    .grid-2 {
+        grid-template-columns: 1fr !important;
     }
 }
 
@@ -559,6 +565,25 @@ h6 {
     border-color: var(--aura-primary);
     background: rgba(255, 255, 255, 0.07);
     box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+}
+
+@media (max-width: 600px) {
+
+    input,
+    select,
+    textarea,
+    .form-input {
+        font-size: 16px !important;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .form-input,
+    input,
+    select {
+        font-size: 16px !important;
+    }
 }
 
 /* Stats */

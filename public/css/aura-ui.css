@@ -138,6 +138,10 @@ body.aura-theme::after {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     letter-spacing: 0.5px;
     text-transform: uppercase;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .nav-btn:hover {
@@ -348,6 +352,28 @@ body.aura-theme::after {
 
     .aura-nav .nav-btn {
         display: none;
+    }
+
+    /* Prevent auto-zoom on iOS/Android and improve accessibility */
+    input,
+    select,
+    textarea,
+    .form-input {
+        font-size: 16px !important;
+    }
+
+    .btn-full {
+        min-height: 52px;
+        padding: 0 1.5rem;
+    }
+
+    .aura-chat-container {
+        padding: 1rem;
+        border-radius: 20px;
+    }
+
+    .chat-input-wrapper {
+        padding: 0.4rem 0.4rem 0.4rem 1.25rem;
     }
 }
 
