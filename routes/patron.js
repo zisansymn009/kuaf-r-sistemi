@@ -47,18 +47,24 @@ router.get('/stats', async (req, res) => {
     try {
         const salonId = req.user.salon_id;
 
-        // Bu bölümü basitleştiriyoruz (eski halı)
-        const appointments = await queryOne('SELECT COUNT(*) as count FROM appointments WHERE salon_id = ?', [salonId]);
-        const unassigned = await queryOne('SELECT COUNT(*) as count FROM appointments WHERE salon_id = ? AND (staff_id IS NULL OR staff_id = 0)', [salonId]);
-        const staff = await queryOne('SELECT COUNT(*) as count FROM users WHERE salon_id = ? AND role = "STAFF" AND is_active = 1', [salonId]);
+        // PostgreSQL uyumlu istatistikler
+        const stats = await queryOne(`
+            SELECT 
+                (SELECT COUNT(*) FROM appointments WHERE salon_id = $1 AND appointment_date = CURRENT_DATE) as today_appointments,
+                (SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE salon_id = $1 AND transaction_type = 'income' AND CAST(created_at AS DATE) = CURRENT_DATE) as today_revenue,
+                (SELECT COALESCE(SUM(amount), 0) FROM transactions WHERE salon_id = $1 AND transaction_type = 'income' AND TO_CHAR(created_at, 'YYYY-MM') = TO_CHAR(CURRENT_DATE, 'YYYY-MM')) as monthly_revenue,
+                (SELECT COUNT(*) FROM users WHERE salon_id = $1 AND role = 'STAFF' AND is_active = 1) as total_staff
+        `, [salonId]);
 
         res.json({
             success: true,
-            totalAppointments: appointments?.count || 0,
-            unassignedAppointments: unassigned?.count || 0,
-            totalStaff: staff?.count || 0
+            todayAppointments: stats.today_appointments || 0,
+            todayRevenue: stats.today_revenue || 0,
+            monthlyRevenue: stats.monthly_revenue || 0,
+            totalStaff: stats.total_staff || 0
         });
     } catch (error) {
+        console.error('Stats error:', error);
         res.status(500).json({ error: 'İstatistikler alınamadı' });
     }
 });
@@ -171,7 +177,7 @@ router.patch('/appointments/:id/assign', async (req, res) => {
         }
 
         // Personelin o salona ait olduğunu doğrula
-        const staff = await queryOne('SELECT id FROM users WHERE id = ? AND salon_id = ? AND role = "STAFF"', [staff_id, salonId]);
+        const staff = await queryOne("SELECT id FROM users WHERE id = ? AND salon_id = ? AND role = 'STAFF'", [staff_id, salonId]);
         if (!staff) {
             return res.status(400).json({ error: 'Geçersiz personel' });
         }
@@ -257,7 +263,7 @@ router.delete('/staff/:id', async (req, res) => {
         const { id } = req.params;
         const salonId = req.user.salon_id;
 
-        await run('DELETE FROM users WHERE id = ? AND salon_id = ? AND role = "STAFF"', [id, salonId]);
+        await run("DELETE FROM users WHERE id = ? AND salon_id = ? AND role = 'STAFF'", [id, salonId]);
         res.json({ success: true, message: 'Personel silindi' });
     } catch (error) {
         res.status(500).json({ error: 'Personel silinemedi' });
@@ -272,7 +278,7 @@ router.patch('/staff/:id/toggle', async (req, res) => {
         const salonId = req.user.salon_id;
 
         await run(
-            'UPDATE users SET is_active = ? WHERE id = ? AND salon_id = ? AND role = "STAFF"',
+            "UPDATE users SET is_active = ? WHERE id = ? AND salon_id = ? AND role = 'STAFF'",
             [is_active ? 1 : 0, id, salonId]
         );
 
@@ -452,7 +458,7 @@ router.post('/staff/:id/advances', async (req, res) => {
 
         // Finansa da gider olarak ekle
         await run(
-            'INSERT INTO finances (salon_id, transaction_type, amount, description) VALUES (?, "expense", ?, ?)',
+            "INSERT INTO transactions (salon_id, transaction_type, amount, description) VALUES (?, 'expense', ?, ?)",
             [salonId, amount, `Personel Ödemesi/Avans: ${staff.full_name} - ${description}`]
         );
 
@@ -1114,7 +1120,7 @@ router.post('/staff/:id/approve', async (req, res) => {
         const salonId = req.user.salon_id;
 
         await run(
-            'UPDATE users SET is_active = 1 WHERE id = ? AND salon_id = ? AND role = "STAFF"',
+            "UPDATE users SET is_active = 1 WHERE id = ? AND salon_id = ? AND role = 'STAFF'",
             [id, salonId]
         );
 
@@ -1132,7 +1138,7 @@ router.post('/staff/:id/reject', async (req, res) => {
         const salonId = req.user.salon_id;
 
         await run(
-            'DELETE FROM users WHERE id = ? AND salon_id = ? AND role = "STAFF" AND is_active = 0',
+            "DELETE FROM users WHERE id = ? AND salon_id = ? AND role = 'STAFF' AND is_active = 0",
             [id, salonId]
         );
 
