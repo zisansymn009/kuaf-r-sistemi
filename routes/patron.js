@@ -351,7 +351,7 @@ router.get('/staff/:id/details', async (req, res) => {
         }
 
         const commissions = await query(
-            'SELECT s.id as service_id, s.name as service_name, s.price as service_price, s.category, IFNULL(ssc.commission_rate, 0) as custom_rate ' +
+            'SELECT s.id as service_id, s.name as service_name, s.price as service_price, s.category, COALESCE(ssc.commission_rate, 0) as custom_rate ' +
             'FROM services s ' +
             'LEFT JOIN staff_service_commissions ssc ON s.id = ssc.service_id AND ssc.staff_id = ? ' +
             'WHERE s.salon_id = ? AND s.is_active = 1',
@@ -420,7 +420,8 @@ router.post('/staff/:id/hours', async (req, res) => {
 
         for (const h of hours) {
             await run(
-                'INSERT OR REPLACE INTO staff_working_hours (staff_id, day_of_week, start_time, end_time, is_off) VALUES (?, ?, ?, ?, ?)',
+                `INSERT INTO staff_working_hours (staff_id, day_of_week, start_time, end_time, is_off) VALUES (?, ?, ?, ?, ?)
+                 ON CONFLICT(staff_id, day_of_week) DO UPDATE SET start_time = EXCLUDED.start_time, end_time = EXCLUDED.end_time, is_off = EXCLUDED.is_off`,
                 [id, h.day, h.start, h.end, h.is_off ? 1 : 0]
             );
         }
@@ -469,8 +470,8 @@ router.get('/catalog', async (req, res) => {
 
         const services = await query(
             `SELECT s.*, 
-                    (SELECT GROUP_CONCAT(image_url) FROM service_images WHERE service_id = s.id AND image_type = 'before') as before_images,
-                    (SELECT GROUP_CONCAT(image_url) FROM service_images WHERE service_id = s.id AND image_type = 'after') as after_images
+                    (SELECT STRING_AGG(image_url, ',') FROM service_images WHERE service_id = s.id AND image_type = 'before') as before_images,
+                    (SELECT STRING_AGG(image_url, ',') FROM service_images WHERE service_id = s.id AND image_type = 'after') as after_images
              FROM services s
              WHERE s.salon_id = ?
              ORDER BY s.category, s.name`,
@@ -1270,12 +1271,12 @@ router.get('/finance/stats', async (req, res) => {
 
         const trend = await query(`
             SELECT 
-                date(created_at) as date,
+                CAST(created_at AS DATE) as date,
                 SUM(CASE WHEN transaction_type = 'income' THEN amount ELSE 0 END) as income,
                 SUM(CASE WHEN transaction_type = 'expense' THEN amount ELSE 0 END) as expense
             FROM transactions
             WHERE salon_id = ? AND created_at >= ?
-            GROUP BY date(created_at)
+            GROUP BY date
             ORDER BY date
         `, [salonId, trendDateStr]);
 
@@ -1378,8 +1379,9 @@ router.post('/settings/hours', async (req, res) => {
 
         for (const h of hours) {
             await run(
-                `INSERT OR REPLACE INTO salon_hours (salon_id, day_of_week, start_time, end_time, is_closed)
-                 VALUES (?, ?, ?, ?, ?)`,
+                `INSERT INTO salon_hours (salon_id, day_of_week, start_time, end_time, is_closed)
+                 VALUES (?, ?, ?, ?, ?)
+                 ON CONFLICT(salon_id, day_of_week) DO UPDATE SET start_time = EXCLUDED.start_time, end_time = EXCLUDED.end_time, is_closed = EXCLUDED.is_closed`,
                 [salonId, h.day, h.start, h.end, h.is_closed ? 1 : 0]
             );
         }

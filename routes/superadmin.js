@@ -112,15 +112,15 @@ router.get('/analytics', async (req, res) => {
         // Aylık ciro (son 12 ay)
         const monthlyRevenue = await query(
             `SELECT 
-                strftime('%Y-%m', a.completed_at) as month,
+                TO_CHAR(a.completed_at, 'YYYY-MM') as month,
                 SUM(s.price) as revenue,
                 COUNT(a.id) as appointment_count
-             FROM appointments a
-             JOIN services s ON a.service_id = s.id
-             WHERE a.status = 'completed' 
-                AND a.completed_at >= date('now', '-12 months')
-             GROUP BY month
-             ORDER BY month DESC`
+              FROM appointments a
+              JOIN services s ON a.service_id = s.id
+              WHERE a.status = 'completed' 
+                 AND a.completed_at >= CURRENT_DATE - INTERVAL '12 months'
+              GROUP BY month
+              ORDER BY month DESC`
         );
 
         // Salon bazlı performans

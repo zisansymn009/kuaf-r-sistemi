@@ -83,8 +83,8 @@ router.get('/salons/:id/services', async (req, res) => {
         const services = await query(
             `SELECT 
                 s.*,
-                GROUP_CONCAT(CASE WHEN si.image_type = 'before' THEN si.image_url END) as before_image,
-                GROUP_CONCAT(CASE WHEN si.image_type = 'after' THEN si.image_url END) as after_image
+                STRING_AGG(CASE WHEN si.image_type = 'before' THEN si.image_url END, ',') as before_image,
+                STRING_AGG(CASE WHEN si.image_type = 'after' THEN si.image_url END, ',') as after_image
              FROM services s
              LEFT JOIN service_images si ON s.id = si.service_id
              WHERE s.salon_id = ? AND s.is_active = 1
@@ -127,8 +127,8 @@ router.get('/catalog/:salonId', async (req, res) => {
         const services = await query(
             `SELECT 
                 s.*,
-                GROUP_CONCAT(CASE WHEN si.image_type = 'before' THEN si.image_url END) as before_images,
-                GROUP_CONCAT(CASE WHEN si.image_type = 'after' THEN si.image_url END) as after_images
+                STRING_AGG(CASE WHEN si.image_type = 'before' THEN si.image_url END, ',') as before_images,
+                STRING_AGG(CASE WHEN si.image_type = 'after' THEN si.image_url END, ',') as after_images
              FROM services s
              LEFT JOIN service_images si ON s.id = si.service_id
              WHERE s.salon_id = ? AND s.is_active = 1

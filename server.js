@@ -101,9 +101,13 @@ async function startServer() {
             console.log('╔════════════════════════════════════════╗');
             console.log('║     🎨 kuaför randevu SaaS Server 🎨      ║');
             console.log('╚════════════════════════════════════════╝');
+            const { getDb } = require('./database/db');
+            const db = getDb();
+            const dbName = db.constructor.name === 'Pool' ? 'PostgreSQL (Supabase/Render)' : 'SQLite (Local beautyflow.db)';
+
             console.log(`✅ kuaför randevu backend is running on port ${PORT}`);
             console.log(`🔗 Local development: http://localhost:${PORT}`);
-            console.log(`✅ Database: SQLite (beautyflow.db)`);
+            console.log(`✅ Database: ${dbName}`);
             console.log('');
             console.log('📍 Endpoints:');
             console.log('   - Landing Page: http://localhost:' + PORT);
