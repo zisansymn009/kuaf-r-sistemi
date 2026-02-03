@@ -96,9 +96,8 @@ router.get('/analytics', async (req, res) => {
             'SELECT COUNT(*) as count FROM salons WHERE is_approved = 1 AND is_active = 1'
         );
 
-        // Toplam randevu sayısı
         const totalAppointments = await queryOne(
-            'SELECT COUNT(*) as count FROM appointments WHERE status = "completed"'
+            "SELECT COUNT(*) as count FROM appointments WHERE status = 'completed'"
         );
 
         // Toplam ciro

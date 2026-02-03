@@ -23,7 +23,7 @@ router.post('/public/chat', async (req, res) => {
         const context = {
             salons: await query('SELECT id, name, address, phone FROM salons WHERE is_approved = 1 AND is_active = 1'),
             services: await query('SELECT id, name, category, price, duration FROM services WHERE is_active = 1 LIMIT 20'),
-            staff: await query('SELECT id, full_name FROM users WHERE role = "STAFF" AND is_active = 1')
+            staff: await query("SELECT id, full_name FROM users WHERE role = 'STAFF' AND is_active = 1")
         };
 
         // Check if message contains a date and calculate availability
@@ -159,7 +159,7 @@ router.post('/patron/chat', authenticateToken, async (req, res) => {
                      ORDER BY a.created_at DESC LIMIT 10`,
                     [salonId]
                 ),
-                query('SELECT full_name, commission_rate FROM users WHERE salon_id = ? AND role = "STAFF"', [salonId]),
+                query("SELECT full_name, commission_rate FROM users WHERE salon_id = ? AND role = 'STAFF'", [salonId]),
                 getFinancialSummary(salonId)
             ]);
 
@@ -296,8 +296,8 @@ router.post('/staff/quick-info', authenticateToken, async (req, res) => {
  */
 async function getFinancialSummary(salonId) {
     try {
-        const income = await queryOne('SELECT SUM(amount) as total FROM transactions WHERE salon_id = ? AND transaction_type = "income"', [salonId]);
-        const expense = await queryOne('SELECT SUM(amount) as total FROM transactions WHERE salon_id = ? AND transaction_type = "expense"', [salonId]);
+        const income = await queryOne("SELECT SUM(amount) as total FROM transactions WHERE salon_id = ? AND transaction_type = 'income'", [salonId]);
+        const expense = await queryOne("SELECT SUM(amount) as total FROM transactions WHERE salon_id = ? AND transaction_type = 'expense'", [salonId]);
         return {
             revenue: income?.total || 0,
             costs: expense?.total || 0,

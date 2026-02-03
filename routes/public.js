@@ -88,7 +88,7 @@ router.get('/salons/:id/services', async (req, res) => {
              FROM services s
              LEFT JOIN service_images si ON s.id = si.service_id
              WHERE s.salon_id = ? AND s.is_active = 1
-             GROUP BY s.id, s.salon_id, s.name, s.description, s.price, s.duration, s.category, s.is_active, s.created_at, s.is_featured, s.featured_until
+             GROUP BY s.id, s.salon_id, s.name, s.description, s.price, s.duration, s.category, s.shampoo_usage, s.dye_usage, s.oxidant_usage, s.general_usage, s.is_active, s.created_at, s.is_featured, s.featured_until
              ORDER BY s.category, s.name`,
             [id]
         );
@@ -132,7 +132,7 @@ router.get('/catalog/:salonId', async (req, res) => {
              FROM services s
              LEFT JOIN service_images si ON s.id = si.service_id
              WHERE s.salon_id = ? AND s.is_active = 1
-             GROUP BY s.id, s.salon_id, s.name, s.description, s.price, s.duration, s.category, s.is_active, s.created_at, s.is_featured, s.featured_until
+             GROUP BY s.id, s.salon_id, s.name, s.description, s.price, s.duration, s.category, s.shampoo_usage, s.dye_usage, s.oxidant_usage, s.general_usage, s.is_active, s.created_at, s.is_featured, s.featured_until
              ORDER BY s.category, s.name`,
             [salonId]
         );
@@ -351,12 +351,12 @@ router.get('/smart-slots/:salonId', async (req, res) => {
             const dateStr = date.toISOString().split('T')[0];
 
             // Get total capacity (simplified: number of staff * working hours)
-            const staffCount = await queryOne('SELECT COUNT(*) as count FROM users WHERE salon_id = ? AND role = "STAFF" AND is_active = 1', [salonId]);
+            const staffCount = await queryOne("SELECT COUNT(*) as count FROM users WHERE salon_id = ? AND role = 'STAFF' AND is_active = 1", [salonId]);
             const totalHours = 10; // 09:00 - 19:00
             const maxAppointments = (staffCount.count || 1) * totalHours;
 
             // Get current appointments for this day
-            const currentApts = await queryOne('SELECT COUNT(*) as count FROM appointments WHERE salon_id = ? AND appointment_date = ? AND status != "cancelled"', [salonId, dateStr]);
+            const currentApts = await queryOne("SELECT COUNT(*) as count FROM appointments WHERE salon_id = ? AND appointment_date = ? AND status != 'cancelled'", [salonId, dateStr]);
 
             // Calculate occupancy
             const occupancy = (currentApts.count / maxAppointments) * 100;

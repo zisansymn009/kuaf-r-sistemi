@@ -47,6 +47,8 @@ CREATE TABLE IF NOT EXISTS services (
     category TEXT, -- Saç, Makyaj, Cilt Bakımı vs.
     shampoo_usage REAL DEFAULT 0, -- gram cinsinden
     dye_usage REAL DEFAULT 0, -- cl cinsinden
+    oxidant_usage REAL DEFAULT 0, -- cl cinsinden
+    general_usage REAL DEFAULT 0, -- gr/adet
     is_active INTEGER DEFAULT 1,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (salon_id) REFERENCES salons(id)

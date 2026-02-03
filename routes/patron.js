@@ -298,7 +298,7 @@ router.patch('/staff/:id', async (req, res) => {
         const salonId = req.user.salon_id;
 
         // Verify staff belongs to salon
-        const staff = await queryOne('SELECT id FROM users WHERE id = ? AND salon_id = ? AND role = "STAFF"', [id, salonId]);
+        const staff = await queryOne("SELECT id FROM users WHERE id = ? AND salon_id = ? AND role = 'STAFF'", [id, salonId]);
         if (!staff) {
             return res.status(404).json({ error: 'Personel bulunamadı' });
         }
@@ -348,7 +348,7 @@ router.get('/staff/:id/details', async (req, res) => {
         const salonId = req.user.salon_id;
 
         const staff = await queryOne(
-            'SELECT id, username, full_name, email, phone, commission_rate, is_active FROM users WHERE id = ? AND salon_id = ? AND role = "STAFF"',
+            "SELECT id, username, full_name, email, phone, commission_rate, is_active FROM users WHERE id = ? AND salon_id = ? AND role = 'STAFF'",
             [id, salonId]
         );
 
@@ -652,9 +652,9 @@ router.post('/catalog', upload.fields([
 
         // Insert service
         const result = await run(
-            `INSERT INTO services (salon_id, name, description, price, duration, category, shampoo_usage, dye_usage)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            [salonId, name, description, price, duration, category, shampoo_usage || 0, dye_usage || 0]
+            `INSERT INTO services (salon_id, name, description, price, duration, category, shampoo_usage, dye_usage, oxidant_usage, general_usage)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [salonId, name, description, price, duration, category, shampoo_usage || 0, dye_usage || 0, oxidant_usage || 0, general_usage || 0]
         );
 
         const serviceId = result.lastID;
@@ -688,26 +688,37 @@ router.post('/catalog', upload.fields([
 router.patch('/catalog/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, price, duration, category, shampoo_usage, dye_usage, is_active } = req.body;
+        const { name, description, price, duration, category, shampoo_usage, dye_usage, oxidant_usage, general_usage, is_active } = req.body;
         const salonId = req.user.salon_id;
 
-        // Eğer sadece is_active güncelleniyorsa
+        // Eğer sadece is_active güncelleniyorka (Toggle)
         if (is_active !== undefined && Object.keys(req.body).length === 1) {
             await run(
                 'UPDATE services SET is_active = ? WHERE id = ? AND salon_id = ?',
                 [is_active ? 1 : 0, id, salonId]
             );
         } else {
-            // Tüm alanları güncelle
-            await run(
-                `UPDATE services 
-                 SET name = ?, description = ?, price = ?, duration = ?, category = ?, 
-                     shampoo_usage = ?, dye_usage = ?, is_active = ?
-                 WHERE id = ? AND salon_id = ?`,
-                [name, description, price, duration, category, shampoo_usage, dye_usage, is_active ? 1 : 0, id, salonId]
-            );
-        }
+            const updates = [];
+            const params = [];
 
+            if (name) { updates.push('name = ?'); params.push(name); }
+            if (description !== undefined) { updates.push('description = ?'); params.push(description); }
+            if (price) { updates.push('price = ?'); params.push(price); }
+            if (duration) { updates.push('duration = ?'); params.push(duration); }
+            if (category) { updates.push('category = ?'); params.push(category); }
+            if (shampoo_usage !== undefined) { updates.push('shampoo_usage = ?'); params.push(shampoo_usage); }
+            if (dye_usage !== undefined) { updates.push('dye_usage = ?'); params.push(dye_usage); }
+            if (oxidant_usage !== undefined) { updates.push('oxidant_usage = ?'); params.push(oxidant_usage); }
+            if (general_usage !== undefined) { updates.push('general_usage = ?'); params.push(general_usage); }
+
+            if (updates.length > 0) {
+                params.push(id, salonId);
+                await run(
+                    `UPDATE services SET ${updates.join(', ')} WHERE id = ? AND salon_id = ?`,
+                    params
+                );
+            }
+        }
         res.json({ success: true });
     } catch (error) {
         console.error('Hizmet güncelleme hatası:', error);
@@ -1435,7 +1446,7 @@ router.post('/featured/request', async (req, res) => {
 
         // Check for pending request
         const pending = await queryOne(
-            'SELECT id FROM featured_requests WHERE salon_id = ? AND status = "pending"',
+            "SELECT id FROM featured_requests WHERE salon_id = ? AND status = 'pending'",
             [salonId]
         );
         if (pending) {
@@ -1467,7 +1478,7 @@ router.get('/featured/status', async (req, res) => {
         );
 
         const pendingRequest = await queryOne(
-            'SELECT * FROM featured_requests WHERE salon_id = ? AND status = "pending"',
+            "SELECT * FROM featured_requests WHERE salon_id = ? AND status = 'pending'",
             [salonId]
         );
 
