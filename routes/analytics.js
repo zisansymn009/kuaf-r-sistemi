@@ -53,8 +53,8 @@ router.get('/', async (req, res) => {
             const dayRevenue = await queryOne(
                 `SELECT SUM(amount) as total FROM transactions 
                  WHERE salon_id = ? AND transaction_type = 'income' 
-                 AND date(created_at) LIKE ?`,
-                [salonId, dStr + '%']
+                 AND CAST(created_at AS DATE) = ?`,
+                [salonId, dStr]
             );
 
             labels.push(date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' }));
@@ -148,7 +148,7 @@ router.get('/summary', async (req, res) => {
                 SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed_appointments,
                 SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_appointments
             FROM appointments
-            WHERE salon_id = ? AND strftime('%Y-%m', appointment_date) = ?
+            WHERE salon_id = ? AND TO_CHAR(appointment_date, 'YYYY-MM') = ?
         `, [salonId, currentMonth]);
 
         // Get revenue (from completed appointments)
@@ -158,7 +158,7 @@ router.get('/summary', async (req, res) => {
             JOIN services s ON a.service_id = s.id
             WHERE a.salon_id = ? 
             AND a.status = 'completed'
-            AND strftime('%Y-%m', a.appointment_date) = ?
+            AND TO_CHAR(a.appointment_date, 'YYYY-MM') = ?
         `, [salonId, currentMonth]);
 
         res.json({
@@ -205,7 +205,7 @@ router.get('/top-customers', async (req, res) => {
                 COUNT(*) as visit_count,
                 SUM(s.price) as total_spent,
                 MAX(a.appointment_date) as last_visit,
-                GROUP_CONCAT(DISTINCT s.name) as services_used
+                STRING_AGG(DISTINCT s.name, ',') as services_used
             FROM appointments a
             JOIN services s ON a.service_id = s.id
             WHERE a.salon_id = ? 
@@ -380,17 +380,17 @@ router.get('/trends', async (req, res) => {
 
         const trends = await query(`
             SELECT 
-                strftime('%Y-%m', a.appointment_date) as month,
+                TO_CHAR(a.appointment_date, 'YYYY-MM') as month,
                 COUNT(*) as appointment_count,
                 SUM(CASE WHEN a.status = 'completed' THEN 1 ELSE 0 END) as completed_count,
                 SUM(CASE WHEN a.status = 'completed' THEN s.price ELSE 0 END) as revenue
             FROM appointments a
             JOIN services s ON a.service_id = s.id
             WHERE a.salon_id = ?
-            AND a.appointment_date >= date('now', '-${months} months')
+            AND a.appointment_date >= CURRENT_DATE - INTERVAL '1 month' * ?
             GROUP BY month
             ORDER BY month ASC
-        `, [salonId]);
+        `, [salonId, months]);
 
         res.json({
             success: true,
