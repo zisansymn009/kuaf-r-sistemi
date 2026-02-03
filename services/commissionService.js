@@ -97,7 +97,7 @@ async function getMonthlyCommissionReport(staffId, month) {
              FROM commissions c
              JOIN appointments a ON c.appointment_id = a.id
              JOIN services s ON a.service_id = s.id
-             WHERE c.staff_id = ? AND strftime('%Y-%m', a.completed_at) = ?
+             WHERE c.staff_id = ? AND TO_CHAR(a.completed_at, 'YYYY-MM') = ?
              ORDER BY a.completed_at DESC`,
             [staffId, month]
         );

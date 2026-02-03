@@ -88,7 +88,7 @@ router.get('/salons/:id/services', async (req, res) => {
              FROM services s
              LEFT JOIN service_images si ON s.id = si.service_id
              WHERE s.salon_id = ? AND s.is_active = 1
-             GROUP BY s.id
+             GROUP BY s.id, s.salon_id, s.name, s.description, s.price, s.duration, s.category, s.is_active, s.created_at, s.is_featured, s.featured_until
              ORDER BY s.category, s.name`,
             [id]
         );
@@ -132,7 +132,7 @@ router.get('/catalog/:salonId', async (req, res) => {
              FROM services s
              LEFT JOIN service_images si ON s.id = si.service_id
              WHERE s.salon_id = ? AND s.is_active = 1
-             GROUP BY s.id
+             GROUP BY s.id, s.salon_id, s.name, s.description, s.price, s.duration, s.category, s.is_active, s.created_at, s.is_featured, s.featured_until
              ORDER BY s.category, s.name`,
             [salonId]
         );

@@ -795,11 +795,11 @@ router.get('/stock/fire-reports', async (req, res) => {
         const params = [salonId];
 
         if (startDate && startDate !== '') {
-            sql += ` AND date(sc.count_date) >= ?`;
+            sql += ` AND CAST(sc.count_date AS DATE) >= ?`;
             params.push(startDate);
         }
         if (endDate && endDate !== '') {
-            sql += ` AND date(sc.count_date) <= ?`;
+            sql += ` AND CAST(sc.count_date AS DATE) <= ?`;
             params.push(endDate);
         }
 

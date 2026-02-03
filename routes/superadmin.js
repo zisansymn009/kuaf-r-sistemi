@@ -119,7 +119,7 @@ router.get('/analytics', async (req, res) => {
               JOIN services s ON a.service_id = s.id
               WHERE a.status = 'completed' 
                  AND a.completed_at >= CURRENT_DATE - INTERVAL '12 months'
-              GROUP BY month
+              GROUP BY TO_CHAR(a.completed_at, 'YYYY-MM')
               ORDER BY month DESC`
         );
 
@@ -134,7 +134,7 @@ router.get('/analytics', async (req, res) => {
              LEFT JOIN appointments a ON sa.id = a.salon_id AND a.status = 'completed'
              LEFT JOIN services s ON a.service_id = s.id
              WHERE sa.is_approved = 1
-             GROUP BY sa.id
+             GROUP BY sa.id, sa.name
              ORDER BY total_revenue DESC
              LIMIT 10`
         );

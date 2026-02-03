@@ -83,7 +83,7 @@ router.get('/', async (req, res) => {
              FROM appointments a
              JOIN services s ON a.service_id = s.id
              WHERE a.salon_id = ? AND a.appointment_date >= ?
-             GROUP BY s.id
+             GROUP BY s.id, s.name
              ORDER BY count DESC
              LIMIT 1`,
             [salonId, dateStr]
@@ -100,7 +100,7 @@ router.get('/', async (req, res) => {
              LEFT JOIN appointments a ON u.id = a.staff_id
              LEFT JOIN services s ON a.service_id = s.id
              WHERE u.salon_id = ? AND u.role = 'STAFF'
-             GROUP BY u.id
+             GROUP BY u.id, u.full_name, u.commission_rate
              ORDER BY revenue DESC`,
             [salonId]
         );
@@ -211,7 +211,7 @@ router.get('/top-customers', async (req, res) => {
             WHERE a.salon_id = ? 
             AND a.status = 'completed'
             AND a.appointment_date >= ?
-            GROUP BY a.customer_phone
+            GROUP BY a.customer_phone, a.customer_name
             ORDER BY visit_count DESC, total_spent DESC
             LIMIT ?
         `, [salonId, dateStr, limit]);
@@ -258,7 +258,7 @@ router.get('/popular-services', async (req, res) => {
             WHERE a.salon_id = ? 
             AND a.status = 'completed'
             AND a.appointment_date >= ?
-            GROUP BY s.id
+            GROUP BY s.id, s.name, s.category, s.price
             ORDER BY booking_count DESC
         `, [salonId, dateStr]);
 
@@ -388,7 +388,7 @@ router.get('/trends', async (req, res) => {
             JOIN services s ON a.service_id = s.id
             WHERE a.salon_id = ?
             AND a.appointment_date >= CURRENT_DATE - INTERVAL '1 month' * ?
-            GROUP BY month
+            GROUP BY TO_CHAR(a.appointment_date, 'YYYY-MM')
             ORDER BY month ASC
         `, [salonId, months]);
 
