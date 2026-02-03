@@ -1264,8 +1264,8 @@ router.get('/finance/stats', async (req, res) => {
         // 1. Özet Rakamlar
         const summaries = await queryOne(`
             SELECT 
-                SUM(CASE WHEN transaction_type = 'income' THEN amount ELSE 0 END) as totalIncome,
-                SUM(CASE WHEN transaction_type = 'expense' THEN amount ELSE 0 END) as totalExpense
+                SUM(CASE WHEN transaction_type = 'income' THEN amount ELSE 0 END) as total_income,
+                SUM(CASE WHEN transaction_type = 'expense' THEN amount ELSE 0 END) as total_expense
             FROM transactions 
             WHERE salon_id = ? AND created_at >= ?
         `, [salonId, dateStr]);
@@ -1298,9 +1298,9 @@ router.get('/finance/stats', async (req, res) => {
         res.json({
             success: true,
             stats: {
-                income: summaries?.totalIncome || 0,
-                expense: summaries?.totalExpense || 0,
-                net: (summaries?.totalIncome || 0) - (summaries?.totalExpense || 0)
+                income: Number(summaries?.total_income || 0),
+                expense: Number(summaries?.total_expense || 0),
+                net: Number(summaries?.total_income || 0) - Number(summaries?.total_expense || 0)
             },
             trend: trend || [],
             transactions: recentTransactions || []
